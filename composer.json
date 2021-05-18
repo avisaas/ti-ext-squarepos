@@ -1,0 +1,12 @@
+{
+  "name": "igniterlabs/squarepos",
+  "type": "tastyigniter-extension",
+  "require": {
+    "square/square": "*"
+  },
+  "config": {
+    "preferred-install": "dist"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
