@@ -3,6 +3,7 @@
 namespace IgniterLabs\SquarePOS\Models;
 
 use Exception;
+use IgniterLabs\SquarePOS\Classes\Connection;
 use IgniterLabs\SquarePOS\Classes\SyncDefinition;
 use Illuminate\Support\Str;
 
@@ -12,26 +13,52 @@ class SyncLog extends \Model
 
     public $guarded = [];
 
+    public $timestamps = TRUE;
+
     protected $casts = [
         'config_data' => 'array',
         'exception' => 'array',
     ];
 
+    protected $appends = ['action_name', 'status_name', 'created_since'];
+
     public function systemOfRecord()
     {
-        return $this->getConfig('systemOfRecord', SyncDefinition::TASTYIGNITER_SOR);
+        return $this->getConfig('systemOfRecord', Connection::TASTYIGNITER_SOR);
     }
 
     public function batchSize()
     {
-        return Settings::batchSize();
+        return $this->getConfig('batchSize', Settings::batchSize());
+    }
+
+    public function isSystemOfRecordSquare()
+    {
+        return $this->systemOfRecord() === Connection::SQUARE_SOR;
     }
 
     //
     //
     //
 
-    public static function storeLog(string $jobClass, array $attributes)
+    public function getStatusNameAttribute($value)
+    {
+        return lang($this->is_success
+            ? 'igniterlabs.squarepos::default.text_success'
+            : 'igniterlabs.squarepos::default.text_failed'
+        );
+    }
+
+    public function getCreatedSinceAttribute($value)
+    {
+        return $this->created_at ? time_elapsed($this->created_at) : null;
+    }
+
+    //
+    //
+    //
+
+    public static function storeLog(string $jobClass, array $attributes = [])
     {
         return self::create([
             'uuid' => Str::uuid(),

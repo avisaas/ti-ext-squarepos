@@ -2,82 +2,133 @@
 
 namespace IgniterLabs\SquarePOS\SyncPipes;
 
-use Admin\Models\Menu_item_options_model;
 use IgniterLabs\SquarePOS\Classes\CatalogFactory;
-use IgniterLabs\SquarePOS\Classes\RemoteMapping;
-use IgniterLabs\SquarePOS\Models\Cache;
+use IgniterLabs\SquarePOS\Classes\Manager;
+use IgniterLabs\SquarePOS\Models\MenuItemOption;
+use IgniterLabs\SquarePOS\Models\MenuItemOptionValue;
 use IgniterLabs\SquarePOS\Models\SyncLog;
+use Illuminate\Support\Collection;
+use Square\Models\CatalogObjectBatch;
 
-class PushItemOptions extends AbstractSyncPipe
+class PushItemOptions
 {
+    protected $mappings = [];
+
+    protected $valueMappings = [];
+
     public function run(SyncLog $syncLog)
     {
-        if (!$itemOptionsIds = $syncLog->getConfig('itemOptionsIds', []))
-            return;
-
-        $catalogFactory = CatalogFactory::instance();
         $idempotencyKey = md5($syncLog->uuid).'_upsert_options';
 
-        $mappings = RemoteMapping::createAll(
-            Cache::getOptionMappings($itemOptionsIds)
-        );
-
-        $batches = Menu_item_options_model::query()
+        $batches = MenuItemOption::query()
             ->with(['menu_option_values.option_value', 'option', 'menu.locations'])
-            ->whereIn('menu_option_id', $itemOptionsIds)
             ->get()
-            ->map(function ($itemOption) use ($mappings, $catalogFactory) {
-                if (!$mapping = $mappings->get($itemOption->getKey()))
-                    return FALSE;
-
-                return $catalogFactory->makeModifierListBatch($itemOption, $mapping);
+            ->chunk($syncLog->getConfig('batchSize'))
+            ->each(function ($itemOptions) {
+                return $this->updateItemOptionVersions($itemOptions);
+            })
+            ->map(function ($itemOptions) {
+                return $this->makeModifierListBatch($itemOptions);
             })
             ->filter()
             ->all();
 
-        $response = $this->apiManager->batchUpsertCatalogObjects($idempotencyKey, $batches);
+        $manager = Manager::instance();
+        $response = $manager->batchUpsertCatalogObjects($idempotencyKey, $batches);
 
-        $idMappings = collect($response->getResult()->getIdMappings() ?? [])
-            ->keyBy(function ($idMapping) {
-                return $idMapping->getClientObjectId();
+        $modifierVersions = collect($this->mappings)
+            ->mapWithKeys(function ($mapping) use ($response, $manager) {
+                $catalogObject = $manager->updateMapping($mapping, $response);
+
+                if ($mapping->model->isDirty(['square_id', 'square_version']))
+                    $mapping->model->save();
+
+                if (!$catalogObject)
+                    return [];
+
+                $modifierObjects = $catalogObject->getModifierListData()->getModifiers();
+
+                return collect($modifierObjects ?? [])
+                    ->mapWithKeys(function ($modifierObject) {
+                        return [$modifierObject->getId() => $modifierObject->getVersion()];
+                    })->all();
             });
 
-        $catalogObjects = collect($response->getResult()->getObjects())
-            ->keyBy(function ($catalogObject) {
-                return $catalogObject->getId();
+        collect($this->valueMappings)
+            ->each(function ($mapping) use ($response, $modifierVersions) {
+                if ($idMapping = $response->getMapping($mapping->squareId))
+                    $mapping->model->square_id = $idMapping->getObjectId();
+
+                if ($modifierVersion = $modifierVersions->get($mapping->model->square_id))
+                    $mapping->model->square_version = $modifierVersion;
+
+                if ($mapping->model->isDirty(['square_id', 'square_version']))
+                    $mapping->model->save();
             });
+    }
 
-        $mappings->each(function (RemoteMapping $mapping) use ($idMappings, $catalogObjects) {
-            if ($idMapping = $idMappings->get($mapping->squareId)) {
-                $mapping->set('squareId', $idMapping->getObjectId());
-            }
+    protected function updateItemOptionVersions(Collection $itemOptions)
+    {
+        $mappedItemOptionsIds = $itemOptions->whereNotNull('square_id');
 
-            if ($catalogObject = $catalogObjects->get($mapping->squareId)) {
-                $modifierObjects = collect(optional($catalogObject->getModifierListData())->getModifiers())
-                    ->keyBy(function ($catalogObject) {
-                        return $catalogObject->getId();
-                    });
+        if ($mappedItemOptionsIds->isNotEmpty()) {
+            $response = Manager::instance()->batchRetrieveCatalogObjects(
+                $mappedItemOptionsIds->pluck('square_id')->all()
+            );
 
-                $values = [];
-                foreach ($mapping->get('values', []) as $key => $value) {
-                    if ($idMapping = $idMappings->get($value['squareId'])) {
-                        $value['squareId'] = $idMapping->getObjectId();
+            $mappedItemOptionsIds
+                ->filter(function ($itemOption) use ($response) {
+                    if (!$catalogObject = $response->getObject($itemOption->square_id))
+                        return TRUE;
+
+                    if ((int)$itemOption->square_version !== $catalogObject->getVersion()) {
+                        $itemOption->square_version = $catalogObject->getVersion();
+                        $itemOption->save();
                     }
 
-                    if ($modifierObject = $modifierObjects->get($value['squareId'])) {
-                        $value['squareVersion'] = $modifierObject->getVersion();
-                    }
+                    return FALSE;
+                });
+        }
 
-                    $values[$key] = $value;
-                }
+        return $itemOptions;
+    }
 
-                $mapping->set('squareVersion', $catalogObject->getVersion());
-                $mapping->set('values', $values);
-            }
+    protected function makeModifierListBatch(Collection $itemOptions)
+    {
+        $batch = $itemOptions->map(function (MenuItemOption $itemOption) {
+            $itemObject = $itemOption->asSquareMenuItemOption();
 
-            $mapping->updateCache();
-        });
+            $itemObject->getModifierListData()->setModifiers(
+                $this->makeModifierObjects($itemOption)
+            );
 
-        Cache::optionMap(RemoteMapping::$mappingsCache);
+            $this->mappings[$itemOption->square_id] = (object)[
+                'modelId' => $itemOption->getKey(),
+                'squareId' => $itemOption->square_id,
+                'squareVersion' => $itemOption->square_version,
+                'model' => $itemOption,
+            ];
+
+            return $itemObject;
+        })->all();
+
+        return new CatalogObjectBatch($batch);
+    }
+
+    protected function makeModifierObjects($itemOption)
+    {
+        return collect($itemOption->menu_option_values ?? [])
+            ->map(function (MenuItemOptionValue $itemOptionValue) {
+                $modifierObject = $itemOptionValue->asSquareMenuItemOptionValue();
+
+                $this->valueMappings[$itemOptionValue->square_id] = (object)[
+                    'modelId' => $itemOptionValue->getKey(),
+                    'squareId' => $itemOptionValue->square_id,
+                    'squareVersion' => $itemOptionValue->square_version,
+                    'model' => $itemOptionValue,
+                ];
+
+                return $modifierObject;
+            })->all();
     }
 }

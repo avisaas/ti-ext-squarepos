@@ -2,6 +2,7 @@
 
 namespace IgniterLabs\SquarePOS\Models;
 
+use IgniterLabs\SquarePOS\Classes\Connection;
 use IgniterLabs\SquarePOS\Classes\Manager;
 use IgniterLabs\SquarePOS\Classes\SyncDefinition;
 use Model;
@@ -9,10 +10,6 @@ use Square\Models\Location;
 
 class Settings extends Model
 {
-    public const TASTYIGNITER_SOR = 0;
-
-    public const SQUARE_SOR = 1;
-
     protected static $locationCache;
 
     public $implement = ['System\Actions\SettingsModel'];
@@ -38,14 +35,14 @@ class Settings extends Model
     public function getSourceOptions()
     {
         return [
-            SyncDefinition::TASTYIGNITER_SOR => 'igniterlabs.squarepos::default.text_tastyigniter',
-            SyncDefinition::SQUARE_SOR => 'igniterlabs.squarepos::default.text_square',
+            Connection::TASTYIGNITER_SOR => 'igniterlabs.squarepos::default.text_tastyigniter',
+            Connection::SQUARE_SOR => 'igniterlabs.squarepos::default.text_square',
         ];
     }
 
     public static function getSystemOfRecord()
     {
-        return self::get('source', SyncDefinition::TASTYIGNITER_SOR);
+        return self::get('source', Connection::TASTYIGNITER_SOR);
     }
 
     public static function locationMapping()

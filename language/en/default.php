@@ -7,6 +7,8 @@ return [
     'text_disconnect' => 'Disconnect from Square POS',
     'text_square' => 'Square POS (overwrite TastyIgniter menu items)',
     'text_tastyigniter' => 'TastyIgniter (update Square catalog)',
+    'text_success' => '<span class="text-success">Success</span>',
+    'text_failed' => '<span class="text-danger">Failed</span>',
 
     'setting_title' => 'Square POS Settings',
     'setting_desc' => 'Configure settings to determine how data sync between Square and TastyIgniter.',

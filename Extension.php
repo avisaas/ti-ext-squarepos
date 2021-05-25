@@ -1,5 +1,6 @@
 <?php namespace IgniterLabs\SquarePOS;
 
+use IgniterLabs\SquarePOS\Commands\SyncCommand;
 use System\Classes\BaseExtension;
 
 /**
@@ -9,6 +10,7 @@ class Extension extends BaseExtension
 {
     public function register()
     {
+        $this->registerConsoleCommand('square.sync', SyncCommand::class);
     }
 
     public function boot()

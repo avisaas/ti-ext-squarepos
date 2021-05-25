@@ -8,16 +8,16 @@ return [
     'form' => [
         'toolbar' => [
             'buttons' => [
+                'back' => [
+                    'label' => 'lang:admin::lang.button_icon_back',
+                    'class' => 'btn btn-default',
+                    'href' => 'settings',
+                ],
                 'save' => [
                     'label' => 'lang:admin::lang.button_save',
                     'class' => 'btn btn-primary',
                     'data-request' => 'onSave',
-                ],
-                'saveClose' => [
-                    'label' => 'lang:admin::lang.button_save_close',
-                    'class' => 'btn btn-default',
-                    'data-request' => 'onSave',
-                    'data-request-data' => 'close:1',
+                    'data-progress-indicator' => 'admin::lang.text_saving',
                 ],
             ],
         ],
@@ -65,12 +65,12 @@ return [
                         ],
                     ],
                 ],
-                'import_menus' => [
-                    'tab' => 'igniterlabs.squarepos::default.text_tab_general',
-                    'label' => 'igniterlabs.squarepos::default.label_import_items',
-                    'type' => 'partial',
-                    'path' => '$/igniterlabs/squarepos/views/settings/field_import_menus',
-                ],
+//                'import_menus' => [
+//                    'tab' => 'igniterlabs.squarepos::default.text_tab_general',
+//                    'label' => 'igniterlabs.squarepos::default.label_import_items',
+//                    'type' => 'partial',
+//                    'path' => '$/igniterlabs/squarepos/views/settings/field_import_menus',
+//                ],
                 'enable_logging' => [
                     'tab' => 'igniterlabs.squarepos::default.text_tab_general',
                     'label' => 'igniterlabs.squarepos::default.label_enable_logging',
@@ -85,6 +85,20 @@ return [
                     'type' => 'partial',
                     'path' => '$/igniterlabs/squarepos/views/settings/field_manual_sync',
                 ],
+//                'logs' => [
+//                    'tab' => 'igniterlabs.squarepos::default.text_tab_history',
+//                    'type' => 'datatable',
+//                    'defaultSort' => ['created_at', 'desc'],
+//                    'useAjax' => TRUE,
+//                    'columns' => [
+//                        'created_since' => [
+//                            'title' => 'lang:igniter.automation::default.column_time_date',
+//                        ],
+//                        'status_name' => [
+//                            'title' => 'lang:igniter.automation::default.column_status',
+//                        ],
+//                    ],
+//                ],
             ],
         ],
     ],

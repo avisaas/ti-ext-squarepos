@@ -3,16 +3,17 @@
 namespace IgniterLabs\SquarePOS\Jobs;
 
 use Exception;
-use IgniterLabs\SquarePOS\Classes\SyncDefinition;
 use IgniterLabs\SquarePOS\Exceptions\SyncFailed;
 use IgniterLabs\SquarePOS\Models\SyncLog;
+use IgniterLabs\SquarePOS\SyncPipes;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-abstract class AbstractJob
+class SyncCatalogJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -21,23 +22,10 @@ abstract class AbstractJob
      */
     protected $syncLog;
 
-    /**
-     * @var int
-     */
-    public $systemOfRecord;
-
-    public $tries;
-
-    public $syncTimeout;
-
-    public $syncInventory;
-
     public function __construct($syncLog)
     {
         $this->syncLog = $syncLog;
     }
-
-    abstract protected function getSyncPipes();
 
     public function handle()
     {
@@ -45,6 +33,8 @@ abstract class AbstractJob
             throw new SyncFailed('Missing system of record');
 
         $syncPipes = $this->getSyncPipes();
+
+        $this->syncLog->setConfig('pipes', $syncPipes);
 
         try {
             app(Pipeline::class)
@@ -61,8 +51,23 @@ abstract class AbstractJob
         }
     }
 
-    public function isSystemOfRecordSquare()
+    protected function getSyncPipes()
     {
-        return $this->syncLog->systemOfRecord() === SyncDefinition::SQUARE_SOR;
+//        $pipes[] = SyncPipes\StartSync::class;
+
+        if ($this->syncLog->isSystemOfRecordSquare()) {
+            $pipes[] = SyncPipes\PullCategories::class;
+//            $pipes[] = SyncPipes\PullItemOptions::class;
+            $pipes[] = SyncPipes\PullItems::class;
+        }
+        else {
+            $pipes[] = SyncPipes\PushCategories::class;
+            $pipes[] = SyncPipes\PushItemOptions::class;
+            $pipes[] = SyncPipes\PushItems::class;
+        }
+
+        $pipes[] = SyncPipes\CompleteSync::class;
+
+        return $pipes;
     }
 }

@@ -12,7 +12,11 @@ class Connection
 {
     use Singleton;
 
-    const ENDPOINT = 'https://connect.tasty-cms.wip/';
+    public const TASTYIGNITER_SOR = 'igniter';
+
+    public const SQUARE_SOR = 'square';
+
+    public const ENDPOINT = 'https://connect.tastyigniter.com/';
 
     public function getAuthorizeUrl(array $params = [])
     {
@@ -31,6 +35,7 @@ class Connection
     public function getRevokeUrl(array $params = [])
     {
         $params['merchant_id'] = $this->getConfig('merchant_id');
+        $params['access_token'] = $this->getConfig('access_token');
 
         return self::ENDPOINT.'square/revoke?'.http_build_query($params);
     }

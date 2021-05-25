@@ -4,6 +4,9 @@ namespace IgniterLabs\SquarePOS\Classes;
 
 use Igniter\Flame\Traits\Singleton;
 use IgniterLabs\SquarePOS\Exceptions\SyncFailed;
+use IgniterLabs\SquarePOS\Jobs\SyncCatalogJob;
+use IgniterLabs\SquarePOS\Models\Settings;
+use IgniterLabs\SquarePOS\Models\SyncLog;
 use Square\Environment;
 use Square\Models\BatchRetrieveCatalogObjectsRequest;
 use Square\Models\BatchUpsertCatalogObjectsRequest;
@@ -47,7 +50,7 @@ class Manager
                 return sprintf('%s: %s (%s)', $error->getCode(), $error->getDetail(), $error->getField());
             }, $response->getErrors())));
 
-        return $response;
+        return new CatalogResponse($response);
     }
 
     public function batchUpsertCatalogObjects(string $idempotencyKey, array $batches)
@@ -63,7 +66,7 @@ class Manager
                 return sprintf('%s: %s (%s)', $error->getCode(), $error->getDetail(), $error->getField());
             }, $response->getErrors())));
 
-        return $response;
+        return new CatalogResponse($response);
     }
 
     public function searchCatalogObjects(array $options, bool $include = FALSE)
@@ -73,9 +76,25 @@ class Manager
         $body->setCursor($options['cursor']);
         $body->setObjectTypes($options['object_types']);
 
-        return $this->createApiClient()
+        $response = $this->createApiClient()
             ->getCatalogApi()
             ->searchCatalogObjects($body);
+
+        if (!$response->isSuccess())
+            throw new SyncFailed($response->getErrors());
+
+        return new CatalogResponse($response);
+    }
+
+    public function updateMapping($mapping, $response)
+    {
+        if ($idMapping = $response->getMapping($mapping->squareId))
+            $mapping->model->square_id = $idMapping->getObjectId();
+
+        if ($catalogObject = $response->getObject($mapping->model->square_id))
+            $mapping->model->square_version = $catalogObject->getVersion();
+
+        return $catalogObject;
     }
 
     protected function createApiClient()
@@ -86,5 +105,45 @@ class Manager
             'accessToken' => $accessToken,
             'environment' => Environment::SANDBOX,
         ]);
+    }
+
+    //
+    //
+    //
+
+    /**
+     * Pull new/updated items from square and update inventory count
+     */
+    public function processSchedule()
+    {
+    }
+
+    /**
+     * Import only NEW items from square
+     */
+    public function processImport()
+    {
+    }
+
+    /**
+     * Sync items between TI and square
+     */
+    public function processSyncCatalog()
+    {
+        $this->dispatchJob(SyncCatalogJob::class, [
+            'systemOfRecord' => Settings::getSystemOfRecord(),
+            'batchSize' => Settings::batchSize(),
+        ]);
+    }
+
+    protected function dispatchJob($jobClass, array $config = [])
+    {
+        $syncLog = SyncLog::storeLog($jobClass, $config);
+
+        $job = new $jobClass($syncLog);
+
+        $syncLog->clearException();
+
+        dispatch($job);
     }
 }

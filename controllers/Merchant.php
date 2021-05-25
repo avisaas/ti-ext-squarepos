@@ -3,8 +3,10 @@
 namespace IgniterLabs\SquarePOS\Controllers;
 
 use Admin\Classes\AdminController;
+use Exception;
 use Igniter\Flame\Exception\ApplicationException;
 use IgniterLabs\SquarePOS\Classes\Connection;
+use IgniterLabs\SquarePOS\Classes\Manager;
 use IgniterLabs\SquarePOS\Classes\SyncProcessor;
 use Illuminate\Support\Facades\Redirect;
 use System\Traits\SessionMaker;
@@ -35,17 +37,19 @@ class Merchant extends AdminController
 
     public function token($context)
     {
-        if (strlen(input('error_message'))) {
-            flash()->error(input('error_message'));
+        try {
+            if (strlen(input('error_message'))) {
+                flash()->error(input('error_message'));
+            }
+            else {
+                if ($this->getSession('state') !== input('state'))
+                    throw new ApplicationException('Access denied, invalid state');
+
+                Connection::instance()->handleAuthCallback(input());
+            }
         }
-        else {
-            if ($this->getSession('state') !== input('state'))
-                throw new ApplicationException('Access denied, invalid state');
-
-            if (!strlen(input('merchant_id')))
-                throw new ApplicationException('Authorization failed, merchant ID not found');
-
-            Connection::instance()->handleAuthCallback(input());
+        catch (Exception $ex) {
+            flash()->error($ex->getMessage());
         }
 
         return Redirect::to($this->getSession('redirect'));
@@ -57,7 +61,9 @@ class Merchant extends AdminController
 
     public function sync()
     {
-        SyncProcessor::instance()->processSyncCatalog();
+        Manager::instance()->processSyncCatalog();
+
+        flash()->success('Queued');
 
         return Redirect::to(referrer_url());
     }
