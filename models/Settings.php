@@ -2,10 +2,10 @@
 
 namespace IgniterLabs\SquarePOS\Models;
 
+use Igniter\Flame\Database\Model;
 use IgniterLabs\SquarePOS\Classes\Connection;
 use IgniterLabs\SquarePOS\Classes\Manager;
 use IgniterLabs\SquarePOS\Classes\SyncDefinition;
-use Model;
 use Square\Models\Location;
 
 class Settings extends Model
