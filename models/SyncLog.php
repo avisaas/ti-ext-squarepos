@@ -3,11 +3,12 @@
 namespace IgniterLabs\SquarePOS\Models;
 
 use Exception;
+use Igniter\Flame\Database\Model;
 use IgniterLabs\SquarePOS\Classes\Connection;
 use IgniterLabs\SquarePOS\Classes\SyncDefinition;
 use Illuminate\Support\Str;
 
-class SyncLog extends \Model
+class SyncLog extends Model
 {
     public $table = 'igniterlabs_squarepos_logs';
 
