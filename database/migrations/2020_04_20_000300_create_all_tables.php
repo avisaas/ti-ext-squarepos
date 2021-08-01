@@ -8,6 +8,9 @@ class CreateAllTables extends Migration
 {
     public function up()
     {
+        if (Schema::hasTable('igniterlabs_squarepos_logs'))
+            return;
+
         Schema::create('igniterlabs_squarepos_logs', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('uuid');
