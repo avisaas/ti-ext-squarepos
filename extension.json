@@ -6,8 +6,8 @@
   "author": "Igniter Labs",
   "icon": {
     "class": "fa fa-cash-register",
-    "backgroundColor": "#7BE4FF",
-    "color": "#198BA6"
+    "backgroundColor": "#147EFB",
+    "color": "#FFFFFF"
   },
   "homepage": "https://tastyigniter.com/marketplace/item/igniterlabs-squarepos"
 }
