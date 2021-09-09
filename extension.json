@@ -3,10 +3,10 @@
   "name": "Square POS for TastyIgniter",
   "description": "Sync menu and order data between TastyIgniter and Square POS.",
   "version": "1.0.0",
-  "author": "Igniter Labs",
+  "author": "Igniter Labs Team",
   "icon": {
-    "class": "fa fa-cash-register",
-    "backgroundColor": "#147EFB",
+    "image": "icon.svg",
+    "backgroundColor": "#FFFFFF",
     "color": "#FFFFFF"
   },
   "homepage": "https://tastyigniter.com/marketplace/item/igniterlabs-squarepos"
