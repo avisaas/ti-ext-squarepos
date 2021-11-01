@@ -49,7 +49,7 @@ class Connection
     {
         $accessToken = $this->getAccessToken();
 
-        if ($accessToken AND $this->isTokenExpired()) {
+        if ($accessToken && $this->isTokenExpired()) {
             $accessToken = $this->refreshAccessToken();
         }
 

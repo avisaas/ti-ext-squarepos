@@ -32,7 +32,7 @@ class Manager
         return collect($result)
             ->filter(function (Location $location) {
                 return ($location->getStatus() === 'ACTIVE'
-                    AND in_array('CREDIT_CARD_PROCESSING', (array)$location->getCapabilities(), TRUE));
+                    && in_array('CREDIT_CARD_PROCESSING', (array)$location->getCapabilities(), TRUE));
             })->values();
     }
 
