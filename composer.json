@@ -1,12 +1,26 @@
 {
-  "name": "igniterlabs/squarepos",
+  "name": "igniterlabs/ti-ext-squarepos",
   "type": "tastyigniter-extension",
+  "description": "Sync menu and order data between TastyIgniter and Square POS.",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Igniter Labs Team"
+    }
+  ],
   "require": {
     "square/square": "*"
   },
-  "config": {
-    "preferred-install": "dist"
-  },
-  "minimum-stability": "dev",
-  "prefer-stable": true
+  "extra": {
+    "tastyigniter-extension": {
+      "code": "igniterlabs.squarepos",
+      "name": "Square POS for TastyIgniter",
+      "icon": {
+        "image": "icon.svg",
+        "backgroundColor": "#FFFFFF",
+        "color": "#FFFFFF"
+      },
+      "homepage": "https://tastyigniter.com/marketplace/item/igniterlabs-squarepos"
+    }
+  }
 }
