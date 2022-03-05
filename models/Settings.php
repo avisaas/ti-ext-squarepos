@@ -12,7 +12,7 @@ class Settings extends Model
 {
     protected static $locationCache;
 
-    public $implement = ['System\Actions\SettingsModel'];
+    public $implement = [\System\Actions\SettingsModel::class];
 
     public $settingsCode = 'igniterlabs_squarepos_settings';
 
