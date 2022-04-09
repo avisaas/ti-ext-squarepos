@@ -32,15 +32,16 @@ class SquareClient
     {
         $response = $this->client->getLocationsApi()->listLocations();
 
-        if (!$response->isSuccess())
+        if (! $response->isSuccess()) {
             throw new ClientException($response);
+        }
 
         $result = $response->getResult()->getLocations();
 
         return collect($result)
             ->filter(function (Location $location) {
                 return ($location->getStatus() === 'ACTIVE'
-                    && in_array('CREDIT_CARD_PROCESSING', (array)$location->getCapabilities(), TRUE));
+                    && in_array('CREDIT_CARD_PROCESSING', (array)$location->getCapabilities(), true));
             })->values();
     }
 
@@ -48,7 +49,7 @@ class SquareClient
     //
     //
 
-    public function searchCatalogObjects(array $options, bool $related = FALSE, bool $deleted = FALSE)
+    public function searchCatalogObjects(array $options, bool $related = false, bool $deleted = false)
     {
         $body = new SearchCatalogObjectsRequest();
         $body->setIncludeRelatedObjects($related);
@@ -60,8 +61,9 @@ class SquareClient
 
         $response = $this->client->getCatalogApi()->searchCatalogObjects($body);
 
-        if (!$response->isSuccess())
+        if (! $response->isSuccess()) {
             throw new ClientException($response);
+        }
 
         return new CatalogResponse($response->getResult());
     }
@@ -70,21 +72,23 @@ class SquareClient
     {
         $response = $this->client->getCatalogApi()->listCatalog($cursor, $types);
 
-        if (!$response->isSuccess())
+        if (! $response->isSuccess()) {
             throw new ClientException($response);
+        }
 
         return new CatalogResponse($response->getResult());
     }
 
-    public function batchRetrieveCatalogObjects(array $ids, bool $include = FALSE)
+    public function batchRetrieveCatalogObjects(array $ids, bool $include = false)
     {
         $body = new BatchRetrieveCatalogObjectsRequest($ids);
         $body->setIncludeRelatedObjects($include);
 
         $response = $this->client->getCatalogApi()->batchRetrieveCatalogObjects($body);
 
-        if (!$response->isSuccess())
+        if (! $response->isSuccess()) {
             throw new ClientException($response);
+        }
 
         return new CatalogResponse($response->getResult());
     }
@@ -95,8 +99,9 @@ class SquareClient
 
         $response = $this->client->getCatalogApi()->batchUpsertCatalogObjects($body);
 
-        if (!$response->isSuccess())
+        if (! $response->isSuccess()) {
             throw new ClientException($response);
+        }
 
         return new CatalogResponse($response->getResult());
     }
@@ -108,8 +113,9 @@ class SquareClient
 
         $response = $this->client->getCatalogApi()->batchDeleteCatalogObjects($body);
 
-        if (!$response->isSuccess())
+        if (! $response->isSuccess()) {
             throw new ClientException($response);
+        }
 
         return new CatalogResponse($response->getResult());
     }
@@ -118,16 +124,17 @@ class SquareClient
     //
     //
 
-    public function batchChangeInventory(array $changes, bool $ignoreUnchanged = TRUE)
+    public function batchChangeInventory(array $changes, bool $ignoreUnchanged = true)
     {
         $body = new BatchChangeInventoryRequest(Str::uuid());
         $body->setChanges($changes);
-        $body->setIgnoreUnchangedCounts(TRUE);
+        $body->setIgnoreUnchangedCounts(true);
 
         $response = $this->client->getInventoryApi()->batchChangeInventory($body);
 
-        if (!$response->isSuccess())
+        if (! $response->isSuccess()) {
             throw new ClientException($response);
+        }
 
         return $response->getResult();
     }

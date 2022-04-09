@@ -127,11 +127,12 @@ class MenuItemAction extends ModelAction
         $result = [];
         $itemOptions = $this->model->menu_options ?? [];
         foreach ($itemOptions as $itemOption) {
-            if (!$itemOption->option->square_id)
+            if (! $itemOption->option->square_id) {
                 continue;
+            }
 
             $modifierListInfoObject = new CatalogItemModifierListInfo($itemOption->option->square_id);
-            $modifierListInfoObject->setEnabled(TRUE);
+            $modifierListInfoObject->setEnabled(true);
             $modifierListInfoObject->setMinSelectedModifiers($itemOption->min_selected ?: 0);
             $modifierListInfoObject->setMaxSelectedModifiers($itemOption->max_selected ?: $itemOption->menu_option_values->count() ?: 1);
 

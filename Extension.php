@@ -1,4 +1,6 @@
-<?php namespace IgniterLabs\SquarePOS;
+<?php
+
+namespace IgniterLabs\SquarePOS;
 
 use Admin\Models\Categories_model;
 use Admin\Models\Menu_option_values_model;

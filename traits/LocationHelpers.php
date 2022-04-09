@@ -9,8 +9,9 @@ trait LocationHelpers
 {
     public function squareLocationRemoteId()
     {
-        if (!$this->model->location)
+        if (! $this->model->location) {
             return null;
+        }
 
         $mapping = Settings::locationMapping()
             ->keyBy('client_id')
@@ -22,8 +23,9 @@ trait LocationHelpers
     public function squareLocationRemoteIds()
     {
         $locationIds = [];
-        if (!$this->model->locations || $this->model->locations->isEmpty())
+        if (! $this->model->locations || $this->model->locations->isEmpty()) {
             return $locationIds;
+        }
 
         $locationMappings = Settings::locationMapping()->keyBy('client_id');
         foreach ($this->model->locations->pluck('location_id')->all() ?? [] as $locationId) {
@@ -39,14 +41,15 @@ trait LocationHelpers
     {
         $locationIds = $this->model->squareLocationRemoteIds();
 
-        $catalogObject->setPresentAtAllLocations(!$locationIds);
+        $catalogObject->setPresentAtAllLocations(! $locationIds);
         $catalogObject->setPresentAtLocationIds($locationIds);
     }
 
     public function squareAttachLocation(CatalogObject $catalogObject)
     {
-        if ($catalogObject->getPresentAtAllLocations())
-            return TRUE;
+        if ($catalogObject->getPresentAtAllLocations()) {
+            return true;
+        }
 
         $attachLocationIds = Settings::locationMapping()
             ->whereIn('remote_id', (array)$catalogObject->getPresentAtLocationIds())

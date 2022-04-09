@@ -28,7 +28,7 @@ class PushStocks extends AbstractSyncPipe
 
             return $locations->isNotEmpty()
                 ? $locations->pluck('location_id')->contains($stock->location_id)
-                : TRUE;
+                : true;
         });
     }
 

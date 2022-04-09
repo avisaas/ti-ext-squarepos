@@ -28,25 +28,28 @@ class PushCategories extends AbstractSyncPipe
 
     protected function removeCleanVersions(Collection $categories)
     {
-        if (!$mappedIds = $categories->whereNotNull('square_id')->pluck('square_id')->all())
+        if (! $mappedIds = $categories->whereNotNull('square_id')->pluck('square_id')->all()) {
             return $categories;
+        }
 
         $response = $this->square->batchRetrieveCatalogObjects($mappedIds);
 
         return $categories->filter(function ($category) use ($response) {
-            if (is_null($category->square_id))
-                return TRUE;
+            if (is_null($category->square_id)) {
+                return true;
+            }
 
             $catalogObject = $response->getObject($category->square_id);
             $squareVersion = $catalogObject ? $catalogObject->getVersion() : null;
 
-            if ((int)$category->square_version === $squareVersion)
-                return FALSE;
+            if ((int)$category->square_version === $squareVersion) {
+                return false;
+            }
 
             $category->square_id = $catalogObject ? $catalogObject->getId() : null;
             $category->square_version = $squareVersion;
 
-            return TRUE;
+            return true;
         });
     }
 
@@ -62,15 +65,18 @@ class PushCategories extends AbstractSyncPipe
     protected function updateSquareAttributes(Collection $categories, CatalogResponse $response)
     {
         $categories->each(function ($category) use ($response) {
-            if ($idMapping = $response->getMapping($category->getSquareId()))
+            if ($idMapping = $response->getMapping($category->getSquareId())) {
                 $category->square_id = $idMapping->getObjectId();
+            }
 
             $catalogObject = $response->getObject($category->square_id);
-            if ((int)$category->square_version !== $catalogObject->getVersion())
+            if ((int)$category->square_version !== $catalogObject->getVersion()) {
                 $category->square_version = $catalogObject->getVersion();
+            }
 
-            if ($category->save())
+            if ($category->save()) {
                 $this->syncTask->noteUpdated($category, $catalogObject->getCategoryData()->getName());
+            }
         });
     }
 }

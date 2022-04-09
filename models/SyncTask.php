@@ -12,7 +12,7 @@ class SyncTask extends Model
 
     public $guarded = [];
 
-    public $timestamps = TRUE;
+    public $timestamps = true;
 
     protected $casts = [
         'config_data' => 'array',
@@ -27,15 +27,17 @@ class SyncTask extends Model
 
     public static function findBy(string $uuid)
     {
-        if (!$model = self::where('uuid', $uuid)->first())
+        if (! $model = self::where('uuid', $uuid)->first()) {
             throw new Exception('No sync task found for: '.$uuid);
+        }
 
         return $model;
     }
 
     public function getStatusNameAttribute($value)
     {
-        return lang($this->is_success
+        return lang(
+            $this->is_success
             ? 'igniterlabs.squarepos::default.text_success'
             : 'igniterlabs.squarepos::default.text_failed'
         );
@@ -74,8 +76,9 @@ class SyncTask extends Model
 
     public function note(string $note)
     {
-        if (!is_null($this->syncJob->logsOutput))
+        if (! is_null($this->syncJob->logsOutput)) {
             $this->syncJob->logsOutput->writeln($note);
+        }
 
         $this->attributes['notes'][] = $note;
 

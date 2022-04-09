@@ -41,15 +41,14 @@ class Merchant extends AdminController
         try {
             if (strlen(input('error_message'))) {
                 flash()->error(input('error_message'));
-            }
-            else {
-                if ($this->getSession('state') !== input('state'))
+            } else {
+                if ($this->getSession('state') !== input('state')) {
                     throw new ApplicationException('Access denied, invalid state');
+                }
 
                 Settings::storeConnectionData(input());
             }
-        }
-        catch (Exception $ex) {
+        } catch (Exception $ex) {
             flash()->error($ex->getMessage());
         }
 

@@ -28,28 +28,32 @@ class PushItemOptions extends AbstractSyncPipe
 
     protected function removeCleanVersions(Collection $exportItems)
     {
-        if (!$mappedIds = $exportItems->whereNotNull('square_id')->pluck('square_id')->all())
+        if (! $mappedIds = $exportItems->whereNotNull('square_id')->pluck('square_id')->all()) {
             return $exportItems;
+        }
 
         $response = $this->square->batchRetrieveCatalogObjects($mappedIds);
 
         return $exportItems->filter(function ($exportItem) use ($response) {
-            if (is_null($exportItem->square_id))
-                return TRUE;
+            if (is_null($exportItem->square_id)) {
+                return true;
+            }
 
             $catalogObject = $response->getObject($exportItem->square_id);
             $squareVersion = $catalogObject ? $catalogObject->getVersion() : null;
 
-            if ((int)$exportItem->square_version === $squareVersion)
-                return FALSE;
+            if ((int)$exportItem->square_version === $squareVersion) {
+                return false;
+            }
 
             $exportItem->square_id = $catalogObject ? $catalogObject->getId() : null;
             $exportItem->square_version = $squareVersion;
 
-            if ($exportItem->hasRelation('option_values'))
+            if ($exportItem->hasRelation('option_values')) {
                 $exportItem->option_values = $this->removeCleanVersions($exportItem->option_values);
+            }
 
-            return TRUE;
+            return true;
         });
     }
 
@@ -74,15 +78,18 @@ class PushItemOptions extends AbstractSyncPipe
     protected function updateSquareAttributes($menuOptions, CatalogResponse $response)
     {
         $menuOptions->each(function ($menuOption) use ($response) {
-            if ($idMapping = $response->getMapping($menuOption->getSquareId()))
+            if ($idMapping = $response->getMapping($menuOption->getSquareId())) {
                 $menuOption->square_id = $idMapping->getObjectId();
+            }
 
             $catalogObject = $response->getObject($menuOption->square_id);
-            if ((int)$menuOption->square_version !== $catalogObject->getVersion())
+            if ((int)$menuOption->square_version !== $catalogObject->getVersion()) {
                 $menuOption->square_version = $catalogObject->getVersion();
+            }
 
-            if ($menuOption->save())
+            if ($menuOption->save()) {
                 $this->syncTask->noteUpdated($menuOption, $catalogObject->getModifierListData()->getName());
+            }
 
             $this->updateValueSquareAttributes($menuOption->option_values, $response, $catalogObject);
         });
@@ -95,15 +102,18 @@ class PushItemOptions extends AbstractSyncPipe
         });
 
         $menuOptionValues->each(function ($menuOptionValue) use ($response, $modifiers) {
-            if ($idMapping = $response->getMapping($menuOptionValue->getSquareId()))
+            if ($idMapping = $response->getMapping($menuOptionValue->getSquareId())) {
                 $menuOptionValue->square_id = $idMapping->getObjectId();
+            }
 
             $modifierObject = $modifiers->get($menuOptionValue->square_id);
-            if ((int)$menuOptionValue->square_version !== $modifierObject->getVersion())
+            if ((int)$menuOptionValue->square_version !== $modifierObject->getVersion()) {
                 $menuOptionValue->square_version = $modifierObject->getVersion();
+            }
 
-            if ($menuOptionValue->save())
+            if ($menuOptionValue->save()) {
                 $this->syncTask->noteUpdated($menuOptionValue, $modifierObject->getModifierData()->getName());
+            }
         });
     }
 }

@@ -18,7 +18,7 @@ class PullItems extends AbstractSyncPipe
 
         $nextBeingTime = now()->toISOString();
 
-        $response = $this->square->searchCatalogObjects($options, TRUE);
+        $response = $this->square->searchCatalogObjects($options, true);
 
         $this->syncTask->setConfigData('beginTimes.item', now()->toISOString())->save();
 
@@ -26,10 +26,11 @@ class PullItems extends AbstractSyncPipe
             $this->syncTask->note('Importing menu items from square');
 
             if ($catalogObject->getIsDeleted()) {
-                if ($model->newQuery()->where('square_id', $catalogObject->getId())->delete())
+                if ($model->newQuery()->where('square_id', $catalogObject->getId())->delete()) {
                     $this->syncTask->noteDeleted($catalogObject, $catalogObject->getCategoryData()->getName());
+                }
 
-                return TRUE;
+                return true;
             }
 
             $menuItem = $model->createFromSquareItem($catalogObject);

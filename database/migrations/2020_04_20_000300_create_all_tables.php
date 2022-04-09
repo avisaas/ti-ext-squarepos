@@ -1,4 +1,6 @@
-<?php namespace IgniterLabs\SquarePOS\Database\Migrations;
+<?php
+
+namespace IgniterLabs\SquarePOS\Database\Migrations;
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -8,8 +10,9 @@ class CreateAllTables extends Migration
 {
     public function up()
     {
-        if (Schema::hasTable('igniterlabs_squarepos_tasks'))
+        if (Schema::hasTable('igniterlabs_squarepos_tasks')) {
             return;
+        }
 
         Schema::create('igniterlabs_squarepos_tasks', function (Blueprint $table) {
             $table->bigIncrements('id');

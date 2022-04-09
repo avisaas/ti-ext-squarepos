@@ -24,8 +24,9 @@ class CreateSquareColumns extends Migration
     public function up()
     {
         foreach (self::$squareTables as $squareTable) {
-            if (Schema::hasColumn($squareTable, 'square_id'))
+            if (Schema::hasColumn($squareTable, 'square_id')) {
                 continue;
+            }
 
             Schema::table($squareTable, function (Blueprint $table) use ($squareTable) {
                 $table->string('square_id')->nullable()->index();
@@ -52,8 +53,9 @@ class CreateSquareColumns extends Migration
     public function down()
     {
         foreach (self::$squareTables as $squareTable) {
-            if (!Schema::hasColumn($squareTable, 'square_id'))
+            if (! Schema::hasColumn($squareTable, 'square_id')) {
                 continue;
+            }
 
             Schema::table($squareTable, function (Blueprint $table) use ($squareTable) {
                 $table->dropColumn([

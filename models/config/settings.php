@@ -51,7 +51,7 @@ return [
                     'tab' => 'igniterlabs.squarepos::default.text_tab_general',
                     'label' => 'igniterlabs.squarepos::default.label_sync_inventory',
                     'type' => 'switch',
-                    'default' => TRUE,
+                    'default' => true,
                     'comment' => 'igniterlabs.squarepos::default.help_sync_inventory',
                     'trigger' => [
                         'action' => 'show',
