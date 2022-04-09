@@ -49,7 +49,7 @@ class Extension extends BaseExtension
                 'label' => 'igniterlabs.squarepos::default.setting_title',
                 'description' => 'igniterlabs.squarepos::default.setting_desc',
                 'icon' => 'fa fa-cash-register',
-                'model' => 'IgniterLabs\SquarePOS\Models\Settings',
+                'model' => \IgniterLabs\SquarePOS\Models\Settings::class,
                 'permissions' => ['IgniterLabs.SquarePOS.*'],
             ],
         ];
