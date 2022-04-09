@@ -2,41 +2,49 @@
 
 namespace IgniterLabs\SquarePOS\SyncPipes;
 
-use IgniterLabs\SquarePOS\Classes\Manager;
-use IgniterLabs\SquarePOS\Models\Menus_model;
-use IgniterLabs\SquarePOS\Models\SyncLog;
+use Admin\Models\Menus_model;
+use Square\Models\CatalogObject;
 
 class PullItems extends AbstractSyncPipe
 {
-    public function run(SyncLog $syncLog)
+    public function execute()
     {
-        $response = Manager::instance()->searchCatalogObjects([
-            'object_types' => ['ITEM', 'ITEM_VARIATION'],
-            'cursor' => $syncLog->getConfig('itemsCursor'),
-            'limit' => $syncLog->batchSize(),
-            'include_related_objects' => TRUE,
-        ]);
+        $options = [
+            'object_types' => ['ITEM'],
+            'cursor' => $this->syncTask->getConfigData('itemCursor'),
+            'limit' => $this->syncTask->batchSize(),
+            'beginTime' => $this->syncTask->getConfigData('beginTimes.item'),
+        ];
 
-        $response->getObjects()->each(function ($catalogObject, $squareId) {
-            if (!$itemData = $catalogObject->getItemData())
+        $nextBeingTime = now()->toISOString();
+
+        $response = $this->square->searchCatalogObjects($options, TRUE);
+
+        $this->syncTask->setConfigData('beginTimes.item', now()->toISOString())->save();
+
+        Menus_model::squareImportItems($response->getObjects(), function (CatalogObject $catalogObject, $model) {
+            $this->syncTask->note('Importing menu items from square');
+
+            if ($catalogObject->getIsDeleted()) {
+                if ($model->newQuery()->where('square_id', $catalogObject->getId())->delete())
+                    $this->syncTask->noteDeleted($catalogObject, $catalogObject->getCategoryData()->getName());
+
                 return TRUE;
+            }
 
-            if (!$itemVariation = array_get($itemData->getVariations(), 0))
-                return TRUE;
+            $menuItem = $model->createFromSquareItem($catalogObject);
 
-            $itemVariationData = $itemVariation->getItemVariationData();
+            $menuItem->squareAttachLocation($catalogObject);
 
-            Menus_model::updateOrCreate([
-                'square_id' => $squareId,
-                'square_variation_id' => $itemVariation->getId(),
-            ], [
-                'menu_name' => $itemData->getName(),
-                'menu_description' => $itemData->getDescription(),
-                'menu_price' => $itemVariationData->getPriceMoney()->getAmount(),
-                'subtract_stock' => $itemVariationData->getTrackInventory(),
-                'square_version' => $catalogObject->getVersion(),
-                'square_variation_version' => $itemVariation->getVersion(),
-            ]);
+            // attach categories
+
+            // attach stocks
+
+            // attach menu item options
         });
+
+        $this->handleResponseCursor($response, 'itemCursor');
+
+        $this->syncTask->setConfigData('beginTimes.modifier', $nextBeingTime)->save();
     }
 }

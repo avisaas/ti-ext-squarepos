@@ -2,76 +2,89 @@
 
 namespace IgniterLabs\SquarePOS\SyncPipes;
 
-use IgniterLabs\SquarePOS\Classes\CatalogFactory;
-use IgniterLabs\SquarePOS\Classes\Manager;
-use IgniterLabs\SquarePOS\Models\Menus_model;
-use IgniterLabs\SquarePOS\Models\SyncLog;
+use Admin\Models\Menus_model;
+use IgniterLabs\SquarePOS\Classes\CatalogResponse;
 use Illuminate\Support\Collection;
 use Square\Models\CatalogObjectBatch;
 
-class PushItems
+class PushItems extends AbstractSyncPipe
 {
-    protected $mappings = [];
-
-    public function run(SyncLog $syncLog)
+    public function execute()
     {
-        $idempotencyKey = md5($syncLog->uuid).'_upsert_items';
+        Menus_model::squareExportItems($this->syncTask, function ($menuItems) {
+            $this->syncTask->note('Exporting menu items into square');
 
-        $batches = Menus_model::query()
-            ->with(['menu_options.menu_option_values', 'locations'])
-            ->get()
-            ->chunk($syncLog->getConfig('batchSize'))
-            ->each(function ($menuItems) {
-                return $this->updateItemVersions($menuItems);
-            })
-            ->map(function ($menuItems) {
-                return $this->makeItemBatch($menuItems);
-            })
-            ->filter()
-            ->all();
+            $menuItems = $this->removeCleanVersions($menuItems);
 
-        $manager = Manager::instance();
-        $response = $manager->batchUpsertCatalogObjects($idempotencyKey, $batches);
+            if ($menuItems->isNotEmpty()) {
+                $batch = $this->makeCatalogBatch($menuItems);
 
-        collect($this->mappings)
-            ->each(function ($mapping) use ($response, $manager) {
-                $catalogObject = $manager->updateMapping($mapping, $response);
+                $response = $this->square->batchUpsertCatalogObjects([$batch]);
 
-                $variationObject = optional($catalogObject->getItemData())->getVariations()[0];
-                if ($variationObject) {
-                    $mapping->model->square_variation_id = $variationObject->getId();
-                    $mapping->model->square_variation_version = $variationObject->getVersion();
-                }
-
-                $mapping->model->save();
-            });
-    }
-
-    public function updateItemVersions(Collection $menuItems)
-    {
-        $menuItems->each(function ($menuItem) {
+                $this->updateSquareAttributes($menuItems, $response);
+            }
         });
-
-        return $menuItems;
     }
 
-    public function makeItemBatch(Collection $menuItems)
+    protected function removeCleanVersions(Collection $menuItems)
     {
-        $batch = $menuItems->map(function (Menus_model $menuItem) {
-            $itemObject = $menuItem->asSquareMenuItem();
+        if (!$mappedIds = $menuItems->whereNotNull('square_id')->pluck('square_id')->all())
+            return $menuItems;
 
-            $this->mappings[$menuItem->getKey()] = (object)[
-                'modelId' => $menuItem->getKey(),
-                'squareId' => $menuItem->square_id,
-                'squareVersion' => $menuItem->square_version,
-                'squareVariationId' => $menuItem->square_variation_id,
-                'squareVariationVersion' => $menuItem->square_variation_version,
-                'model' => $menuItem,
-            ];
+        $response = $this->square->batchRetrieveCatalogObjects($mappedIds);
 
-            return $itemObject;
-        })->all();
+        return $menuItems->filter(function ($menuItem) use ($response) {
+            if (is_null($menuItem->square_id) || is_null($menuItem->square_variation_id))
+                return TRUE;
+
+            $catalogObject = $response->getObject($menuItem->square_id);
+            $squareVersion = $catalogObject ? $catalogObject->getVersion() : null;
+
+            if ((int)$menuItem->square_version === $squareVersion)
+                return FALSE;
+
+            $menuItem->square_id = $catalogObject ? $catalogObject->getId() : null;
+            $menuItem->square_version = $squareVersion;
+
+            $squareVariationVersion = ($catalogObject && is_array($variations = optional($catalogObject->getItemData())->getVariations()))
+                ? $variations[0]->getVersion() : null;
+
+            if ((int)$menuItem->square_variation_version === $squareVariationVersion)
+                return FALSE;
+
+            $menuItem->square_variation_id = isset($variations[0]) ? $variations[0]->getId() : null;
+            $menuItem->square_variation_version = $squareVariationVersion;
+
+            return TRUE;
+        });
+    }
+
+    protected function makeCatalogBatch(Collection $menuItems)
+    {
+        $batch = $menuItems->map(function ($menuItem) {
+            return $menuItem->asSquareItem();
+        })->values()->all();
 
         return new CatalogObjectBatch($batch);
+    }
+
+    protected function updateSquareAttributes(Collection $menuItems, CatalogResponse $response)
+    {
+        $menuItems->each(function ($menuItem) use ($response) {
+            if ($idMapping = $response->getMapping($menuItem->getSquareId()))
+                $menuItem->square_id = $idMapping->getObjectId();
+
+            $catalogObject = $response->getObject($menuItem->square_id);
+            if ((int)$menuItem->square_version !== $catalogObject->getVersion())
+                $menuItem->square_version = $catalogObject->getVersion();
+
+            if ($variationObject = optional($catalogObject->getItemData())->getVariations()[0]) {
+                $menuItem->square_variation_id = $variationObject->getId();
+                $menuItem->square_variation_version = $variationObject->getVersion();
+            }
+
+            if ($menuItem->save())
+                $this->syncTask->noteUpdated($menuItem, $catalogObject->getItemData()->getName());
+        });
     }
 }

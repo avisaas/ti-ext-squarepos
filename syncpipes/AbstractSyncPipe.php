@@ -2,53 +2,37 @@
 
 namespace IgniterLabs\SquarePOS\SyncPipes;
 
-use Closure;
-use IgniterLabs\SquarePOS\Classes\Manager;
-use IgniterLabs\SquarePOS\Models\SyncLog;
+use IgniterLabs\SquarePOS\Classes\CatalogResponse;
+use IgniterLabs\SquarePOS\Classes\SquareClient;
+use IgniterLabs\SquarePOS\Models\SyncTask;
 
 abstract class AbstractSyncPipe
 {
     /**
-     * @var \IgniterLabs\SquarePOS\Classes\Manager
+     * @var \IgniterLabs\SquarePOS\Classes\SquareClient
      */
-    protected $apiManager;
+    protected $square;
 
-    protected $mappings;
+    /**
+     * @var \IgniterLabs\SquarePOS\Models\SyncTask
+     */
+    protected SyncTask $syncTask;
 
-    public function __construct()
+    public function __construct(SyncTask $syncTask)
     {
-        $this->apiManager = Manager::instance();
+        $this->syncTask = $syncTask;
+
+        $this->square = resolve(SquareClient::class);
     }
 
-    abstract public function run(SyncLog $syncLog);
+    abstract public function execute();
 
-    public function handle($syncLog, Closure $next)
+    protected function handleResponseCursor(CatalogResponse $response, $key = null): void
     {
-        try {
-            $this->run($syncLog);
+        if ($cursor = $response->getResponse()->getCursor()) {
+            $this->syncTask->setConfigData($key, $cursor)->save();
+
+            $this->execute();
         }
-        finally {
-            $this->complete($syncLog);
-        }
-
-        return $next($syncLog);
-    }
-
-    protected function complete(SyncLog $syncLog)
-    {
-        $pipes = $syncLog->getConfig('pipes', []);
-        $pipes[] = get_called_class();
-        $syncLog->setConfig('pipes', $pipes);
-    }
-
-    protected function updateMapping($mapping, $response)
-    {
-        if ($idMapping = $response->getMapping($mapping->squareId))
-            $mapping->model->square_id = $idMapping->getObjectId();
-
-        if ($catalogObject = $response->getObject($mapping->model->square_id))
-            $mapping->model->square_version = $catalogObject->getVersion();
-
-        return $catalogObject;
     }
 }

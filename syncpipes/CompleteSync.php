@@ -2,11 +2,12 @@
 
 namespace IgniterLabs\SquarePOS\SyncPipes;
 
-use IgniterLabs\SquarePOS\Models\SyncLog;
+use IgniterLabs\SquarePOS\Models\Settings;
 
-class CompleteSync
+class CompleteSync extends AbstractSyncPipe
 {
-    public function run(SyncLog $syncLog)
+    public function execute()
     {
+        Settings::setSearchBeginTimes($this->syncTask->getConfigData('beginTimes'));
     }
 }

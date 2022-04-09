@@ -2,9 +2,8 @@
 
 namespace IgniterLabs\SquarePOS\Commands;
 
+use IgniterLabs\SquarePOS\Classes\Dispatcher;
 use IgniterLabs\SquarePOS\Jobs\SyncCatalogJob;
-use IgniterLabs\SquarePOS\Models\Settings;
-use IgniterLabs\SquarePOS\Models\SyncLog;
 use Illuminate\Console\Command;
 
 class SyncCommand extends Command
@@ -27,16 +26,10 @@ class SyncCommand extends Command
      */
     public function handle()
     {
-        $syncLog = SyncLog::storeLog(SyncCatalogJob::class, [
-            'systemOfRecord' => Settings::getSystemOfRecord(),
-            'batchSize' => Settings::batchSize(),
-        ]);
-
-        $syncLog->clearException();
-
-        SyncCatalogJob::dispatchNow($syncLog);
+        Dispatcher::create(SyncCatalogJob::class)
+            ->setLogsOutput($this->output)
+            ->dispatchSync();
 
         $this->output->writeln('Sync complete');
     }
-
 }

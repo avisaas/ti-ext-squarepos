@@ -2,30 +2,39 @@
 
 namespace IgniterLabs\SquarePOS\SyncPipes;
 
-use IgniterLabs\SquarePOS\Classes\Manager;
-use IgniterLabs\SquarePOS\Models\MenuItemOption;
-use IgniterLabs\SquarePOS\Models\SyncLog;
+use Admin\Models\Menu_options_model;
+use Square\Models\CatalogObject;
 
 class PullItemOptions extends AbstractSyncPipe
 {
-    public function run(SyncLog $syncLog)
+    public function execute()
     {
-        $response = Manager::instance()->searchCatalogObjects([
-            'object_types' => ['MODIFIER_LIST', 'MODIFIER'],
-            'cursor' => $syncLog->getConfig('categoriesCursor'),
-            'limit' => $syncLog->batchSize(),
-            'include_related_objects' => TRUE,
-        ]);
+        $options = [
+            'object_types' => ['MODIFIER_LIST'],
+            'cursor' => $this->syncTask->getConfigData('modifierCursor'),
+            'limit' => $this->syncTask->batchSize(),
+            'beginTime' => $this->syncTask->getConfigData('beginTimes.modifier'),
+        ];
 
-        $response->getObjects()->each(function ($catalogObject, $squareId) {
-            $menuOption = MenuItemOption::updateOrCreate([
-                'square_id' => $squareId,
-            ], [
-                'name' => $catalogObject->getModifierListData()->getName(),
-                'priority' => $catalogObject->getModifierListData()->getOrdinal(),
-                'display_type' => $catalogObject->getModifierListData()->getSelectionType() === 'MULTIPLE' ? 'checkbox' : 'radio',
-                'square_version' => $catalogObject->getVersion(),
-            ]);
+        $nextBeingTime = now()->toISOString();
+
+        $response = $this->square->searchCatalogObjects($options, TRUE);
+
+        Menu_options_model::squareImportItems($response->getObjects(), function (CatalogObject $catalogObject, $model) {
+            $this->syncTask->note('Importing menu options from square');
+
+            if ($catalogObject->getIsDeleted()) {
+                $model->newQuery()->where('square_id', $catalogObject->getId())->delete();
+            }
+            else {
+                $menuOption = $model->createFromSquareModifierList($catalogObject);
+
+                $menuOption->squareAttachLocation($catalogObject);
+            }
         });
+
+        $this->handleResponseCursor($response, 'modifierCursor');
+
+        $this->syncTask->setConfigData('beginTimes.modifier', $nextBeingTime)->save();
     }
 }

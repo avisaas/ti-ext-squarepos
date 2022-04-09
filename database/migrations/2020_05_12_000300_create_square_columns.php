@@ -11,7 +11,8 @@ class CreateSquareColumns extends Migration
     protected static $squareTables = [
         'menus',
         'categories',
-        'menu_item_options',
+        'menu_options',
+        'menu_option_values',
         'menu_item_option_values',
     ];
 
@@ -34,6 +35,11 @@ class CreateSquareColumns extends Migration
                     $table->string('square_variation_id')->nullable()->index();
                     $table->string('square_variation_version')->nullable()->index();
                 }
+//
+//                if ($squareTable === 'menu_item_option_values') {
+//                    $table->string('square_modifier_list_id')->nullable()->index();
+//                    $table->string('square_modifier_list_version')->nullable()->index();
+//                }
             });
         }
     }
@@ -61,6 +67,13 @@ class CreateSquareColumns extends Migration
                         'square_variation_version',
                     ]);
                 }
+
+//                if ($squareTable === 'menu_item_option_values') {
+//                    $table->dropColumn([
+//                        'square_modifier_list_id',
+//                        'square_modifier_list_version',
+//                    ]);
+//                }
             });
         }
     }

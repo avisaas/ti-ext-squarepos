@@ -3,61 +3,61 @@
 namespace IgniterLabs\SquarePOS\Jobs;
 
 use Exception;
-use IgniterLabs\SquarePOS\Exceptions\SyncFailed;
-use IgniterLabs\SquarePOS\Models\SyncLog;
+use IgniterLabs\SquarePOS\Exceptions\SyncException;
+use IgniterLabs\SquarePOS\Models\SyncTask;
 use IgniterLabs\SquarePOS\SyncPipes;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Pipeline\Pipeline;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Throwable;
 
 class SyncCatalogJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    /**
-     * @var \IgniterLabs\SquarePOS\Models\SyncLog
-     */
-    protected $syncLog;
+    public $uuid = '';
 
-    public function __construct($syncLog)
-    {
-        $this->syncLog = $syncLog;
-    }
+    /**
+     * The output interface implementation.
+     *
+     * @var \Illuminate\Console\OutputStyle
+     */
+    public $logsOutput;
 
     public function handle()
     {
-        if (!$this->syncLog->getConfig('systemOfRecord'))
-            throw new SyncFailed('Missing system of record');
+        if (!$this->uuid)
+            throw new SyncException('Missing sync task identifier');
 
-        $syncPipes = $this->getSyncPipes();
+        $syncTask = SyncTask::findBy($this->uuid);
 
-        $this->syncLog->setConfig('pipes', $syncPipes);
+        $syncTask->setSyncJob($this);
 
         try {
-            app(Pipeline::class)
-                ->send($this->syncLog)
-                ->through($syncPipes)
-                ->then(function (SyncLog $syncLog) {
-                    $syncLog->markAsSuccessful();
-                });
+            $this->getSyncPipes($syncTask)->each(function (string $syncPipe) use ($syncTask) {
+                (new $syncPipe($syncTask))->execute();
+
+                $syncTask->save();
+            });
+
+            $syncTask->markAsComplete();
         }
-        catch (Exception $ex) {
-            $this->syncLog->saveException($ex);
+        catch (Throwable | Exception $ex) {
+            $syncTask->saveException($ex);
 
             throw $ex;
         }
     }
 
-    protected function getSyncPipes()
+    protected function getSyncPipes($syncTask)
     {
-//        $pipes[] = SyncPipes\StartSync::class;
+        $pipes[] = SyncPipes\StartSync::class;
 
-        if ($this->syncLog->isSystemOfRecordSquare()) {
+        if ($syncTask->isSystemOfRecordSquare()) {
             $pipes[] = SyncPipes\PullCategories::class;
-//            $pipes[] = SyncPipes\PullItemOptions::class;
+            $pipes[] = SyncPipes\PullItemOptions::class;
             $pipes[] = SyncPipes\PullItems::class;
         }
         else {
@@ -68,6 +68,6 @@ class SyncCatalogJob implements ShouldQueue
 
         $pipes[] = SyncPipes\CompleteSync::class;
 
-        return $pipes;
+        return collect($pipes);
     }
 }

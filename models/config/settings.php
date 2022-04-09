@@ -19,11 +19,16 @@ return [
                     'data-request' => 'onSave',
                     'data-progress-indicator' => 'admin::lang.text_saving',
                 ],
+                'manual_sync' => [
+                    'label' => 'lang:igniterlabs.squarepos::default.button_manual_sync',
+                    'class' => 'btn btn-default',
+                    'href' => 'igniterlabs/squarepos/merchant/sync',
+                ],
             ],
         ],
         'tabs' => [
             'fields' => [
-                'connection' => [
+                'connection_data[status]' => [
                     'tab' => 'igniterlabs.squarepos::default.text_tab_general',
                     'label' => 'igniterlabs.squarepos::default.label_connection',
                     'type' => 'partial',
@@ -36,6 +41,11 @@ return [
                     'type' => 'select',
                     'span' => 'left',
                     'comment' => 'igniterlabs.squarepos::default.help_system_record',
+                    'trigger' => [
+                        'action' => 'show',
+                        'field' => 'connection_data[status]',
+                        'condition' => 'value[1]',
+                    ],
                 ],
                 'sync_inventory' => [
                     'tab' => 'igniterlabs.squarepos::default.text_tab_general',
@@ -43,9 +53,15 @@ return [
                     'type' => 'switch',
                     'default' => TRUE,
                     'comment' => 'igniterlabs.squarepos::default.help_sync_inventory',
+                    'trigger' => [
+                        'action' => 'show',
+                        'field' => 'connection_data[status]',
+                        'condition' => 'value[1]',
+                    ],
                 ],
+
                 'location_mappings' => [
-                    'tab' => 'igniterlabs.squarepos::default.text_tab_general',
+                    'tab' => 'igniterlabs.squarepos::default.text_tab_location',
                     'label' => 'igniterlabs.squarepos::default.label_location',
                     'type' => 'repeater',
                     'span' => 'left',
@@ -64,41 +80,12 @@ return [
                             ],
                         ],
                     ],
+                    'trigger' => [
+                        'action' => 'show',
+                        'field' => 'connection_data[status]',
+                        'condition' => 'value[1]',
+                    ],
                 ],
-//                'import_menus' => [
-//                    'tab' => 'igniterlabs.squarepos::default.text_tab_general',
-//                    'label' => 'igniterlabs.squarepos::default.label_import_items',
-//                    'type' => 'partial',
-//                    'path' => '$/igniterlabs/squarepos/views/settings/field_import_menus',
-//                ],
-                'enable_logging' => [
-                    'tab' => 'igniterlabs.squarepos::default.text_tab_general',
-                    'label' => 'igniterlabs.squarepos::default.label_enable_logging',
-                    'type' => 'switch',
-                    'default' => FALSE,
-                    'comment' => 'igniterlabs.squarepos::default.help_enable_logging',
-                ],
-
-                'manual_sync' => [
-                    'tab' => 'igniterlabs.squarepos::default.text_tab_history',
-                    'label' => 'igniterlabs.squarepos::default.label_manual_sync',
-                    'type' => 'partial',
-                    'path' => '$/igniterlabs/squarepos/views/settings/field_manual_sync',
-                ],
-//                'logs' => [
-//                    'tab' => 'igniterlabs.squarepos::default.text_tab_history',
-//                    'type' => 'datatable',
-//                    'defaultSort' => ['created_at', 'desc'],
-//                    'useAjax' => TRUE,
-//                    'columns' => [
-//                        'created_since' => [
-//                            'title' => 'lang:igniter.automation::default.column_time_date',
-//                        ],
-//                        'status_name' => [
-//                            'title' => 'lang:igniter.automation::default.column_status',
-//                        ],
-//                    ],
-//                ],
             ],
         ],
     ],

@@ -2,81 +2,75 @@
 
 namespace IgniterLabs\SquarePOS\SyncPipes;
 
-use IgniterLabs\SquarePOS\Classes\CatalogFactory;
-use IgniterLabs\SquarePOS\Classes\Manager;
-use IgniterLabs\SquarePOS\Models\Categories_model;
-use IgniterLabs\SquarePOS\Models\SyncLog;
+use Admin\Models\Categories_model;
+use IgniterLabs\SquarePOS\Classes\CatalogResponse;
 use Illuminate\Support\Collection;
 use Square\Models\CatalogObjectBatch;
 
-class PushCategories
+class PushCategories extends AbstractSyncPipe
 {
-    protected $mappings = [];
-
-    public function run(SyncLog $syncLog)
+    public function execute()
     {
-        $idempotencyKey = md5($syncLog->uuid).'_upsert_categories';
+        Categories_model::squareExportItems($this->syncTask, function ($categories) {
+            $this->syncTask->note('Exporting categories into square');
 
-        $batches = Categories_model::query()
-            ->get()
-            ->chunk($syncLog->getConfig('batchSize'))
-            ->each(function ($categories) {
-                return $this->updateCategoryVersions($categories);
-            })
-            ->map(function ($categories) {
-                return $this->makeCategoryBatch($categories);
-            })
-            ->filter()
-            ->all();
+            $categories = $this->removeCleanVersions($categories);
 
-        $manager = Manager::instance();
-        $response = $manager->batchUpsertCatalogObjects($idempotencyKey, $batches);
+            if ($categories->isNotEmpty()) {
+                $batch = $this->makeCatalogBatch($categories);
 
-        collect($this->mappings)
-            ->each(function ($mapping) use ($response, $manager) {
-                $manager->updateMapping($mapping, $response);
+                $response = $this->square->batchUpsertCatalogObjects([$batch]);
 
-                if ($mapping->model->isDirty(['square_id', 'square_version']))
-                    $mapping->model->save();
-            });
+                $this->updateSquareAttributes($categories, $response);
+            }
+        });
     }
 
-    protected function updateCategoryVersions(Collection $categories)
+    protected function removeCleanVersions(Collection $categories)
     {
-        $mappedCategoryIds = $categories->whereNotNull('square_id');
+        if (!$mappedIds = $categories->whereNotNull('square_id')->pluck('square_id')->all())
+            return $categories;
 
-        if ($mappedCategoryIds->isNotEmpty()) {
-            $response = Manager::instance()->batchRetrieveCatalogObjects(
-                $mappedCategoryIds->pluck('square_id')->all()
-            );
+        $response = $this->square->batchRetrieveCatalogObjects($mappedIds);
 
-            $mappedCategoryIds
-                ->each(function ($category) use ($response) {
-                    $catalogObject = $response->getObject($category->square_id);
+        return $categories->filter(function ($category) use ($response) {
+            if (is_null($category->square_id))
+                return TRUE;
 
-                    $category->square_version = optional($catalogObject)->getVersion();
-                    $category->save();
-                });
-        }
+            $catalogObject = $response->getObject($category->square_id);
+            $squareVersion = $catalogObject ? $catalogObject->getVersion() : null;
 
-        return $categories;
+            if ((int)$category->square_version === $squareVersion)
+                return FALSE;
+
+            $category->square_id = $catalogObject ? $catalogObject->getId() : null;
+            $category->square_version = $squareVersion;
+
+            return TRUE;
+        });
     }
 
-    protected function makeCategoryBatch(Collection $categories)
+    protected function makeCatalogBatch(Collection $categories)
     {
-        $batch = $categories->map(function (Categories_model $category) {
-            $categoryObject = $category->asSquareCategory();
-
-            $this->mappings[$category->getKey()] = (object)[
-                'modelId' => $category->getKey(),
-                'squareId' => $category->square_id,
-                'squareVersion' => $category->square_version,
-                'model' => $category,
-            ];
-
-            return $categoryObject;
-        })->all();
+        $batch = $categories->map(function ($category) {
+            return $category->asSquareCategory();
+        })->values()->all();
 
         return new CatalogObjectBatch($batch);
+    }
+
+    protected function updateSquareAttributes(Collection $categories, CatalogResponse $response)
+    {
+        $categories->each(function ($category) use ($response) {
+            if ($idMapping = $response->getMapping($category->getSquareId()))
+                $category->square_id = $idMapping->getObjectId();
+
+            $catalogObject = $response->getObject($category->square_id);
+            if ((int)$category->square_version !== $catalogObject->getVersion())
+                $category->square_version = $catalogObject->getVersion();
+
+            if ($category->save())
+                $this->syncTask->noteUpdated($category, $catalogObject->getCategoryData()->getName());
+        });
     }
 }
