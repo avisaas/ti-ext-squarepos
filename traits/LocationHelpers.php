@@ -9,7 +9,7 @@ trait LocationHelpers
 {
     public function squareLocationRemoteId()
     {
-        if (! $this->model->location) {
+        if (!$this->model->location) {
             return null;
         }
 
@@ -23,7 +23,7 @@ trait LocationHelpers
     public function squareLocationRemoteIds()
     {
         $locationIds = [];
-        if (! $this->model->locations || $this->model->locations->isEmpty()) {
+        if (!$this->model->locations || $this->model->locations->isEmpty()) {
             return $locationIds;
         }
 
@@ -41,7 +41,7 @@ trait LocationHelpers
     {
         $locationIds = $this->model->squareLocationRemoteIds();
 
-        $catalogObject->setPresentAtAllLocations(! $locationIds);
+        $catalogObject->setPresentAtAllLocations(!$locationIds);
         $catalogObject->setPresentAtLocationIds($locationIds);
     }
 

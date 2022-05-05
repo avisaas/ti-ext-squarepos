@@ -30,7 +30,7 @@ class Settings extends Model
         }
 
         $locations = [];
-        if (! $this->isConnected()) {
+        if (!$this->isConnected()) {
             return $locations;
         }
 
@@ -40,7 +40,8 @@ class Settings extends Model
                 ->mapWithKeys(function (Location $location) {
                     return [$location->getId() => $location->getName()];
                 })->all();
-        } catch (ClientException $ex) {
+        }
+        catch (ClientException $ex) {
             flash()->error($ex->getMessage())->now();
         }
 
@@ -128,7 +129,7 @@ class Settings extends Model
             'expires_at',
         ]);
 
-        $data['status'] = ! empty($data['access_token']);
+        $data['status'] = !empty($data['access_token']);
 
         self::set('connection_data', $data);
     }

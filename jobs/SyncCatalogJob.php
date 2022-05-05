@@ -31,7 +31,7 @@ class SyncCatalogJob implements ShouldQueue
 
     public function handle()
     {
-        if (! $this->uuid) {
+        if (!$this->uuid) {
             throw new SyncException('Missing sync task identifier');
         }
 
@@ -47,7 +47,8 @@ class SyncCatalogJob implements ShouldQueue
             });
 
             $syncTask->markAsComplete();
-        } catch (Throwable | Exception $ex) {
+        }
+        catch (Throwable | Exception $ex) {
             $syncTask->saveException($ex);
 
             throw $ex;
@@ -62,7 +63,8 @@ class SyncCatalogJob implements ShouldQueue
             $pipes[] = SyncPipes\PullCategories::class;
             $pipes[] = SyncPipes\PullItemOptions::class;
             $pipes[] = SyncPipes\PullItems::class;
-        } else {
+        }
+        else {
             $pipes[] = SyncPipes\PushCategories::class;
             $pipes[] = SyncPipes\PushItemOptions::class;
             $pipes[] = SyncPipes\PushItems::class;

@@ -28,7 +28,7 @@ class PushCategories extends AbstractSyncPipe
 
     protected function removeCleanVersions(Collection $categories)
     {
-        if (! $mappedIds = $categories->whereNotNull('square_id')->pluck('square_id')->all()) {
+        if (!$mappedIds = $categories->whereNotNull('square_id')->pluck('square_id')->all()) {
             return $categories;
         }
 

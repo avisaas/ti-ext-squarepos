@@ -28,7 +28,7 @@ class PushItems extends AbstractSyncPipe
 
     protected function removeCleanVersions(Collection $menuItems)
     {
-        if (! $mappedIds = $menuItems->whereNotNull('square_id')->pluck('square_id')->all()) {
+        if (!$mappedIds = $menuItems->whereNotNull('square_id')->pluck('square_id')->all()) {
             return $menuItems;
         }
 

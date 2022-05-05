@@ -28,7 +28,7 @@ class PushItemOptions extends AbstractSyncPipe
 
     protected function removeCleanVersions(Collection $exportItems)
     {
-        if (! $mappedIds = $exportItems->whereNotNull('square_id')->pluck('square_id')->all()) {
+        if (!$mappedIds = $exportItems->whereNotNull('square_id')->pluck('square_id')->all()) {
             return $exportItems;
         }
 

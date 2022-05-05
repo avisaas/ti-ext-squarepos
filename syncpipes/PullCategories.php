@@ -26,7 +26,8 @@ class PullCategories extends AbstractSyncPipe
                 if ($model->newQuery()->where('square_id', $catalogObject->getId())->delete()) {
                     $this->syncTask->noteDeleted($catalogObject, $catalogObject->getCategoryData()->getName());
                 }
-            } else {
+            }
+            else {
                 $category = $model->createFromSquareCategory($catalogObject);
 
                 $category->squareAttachLocation($catalogObject);

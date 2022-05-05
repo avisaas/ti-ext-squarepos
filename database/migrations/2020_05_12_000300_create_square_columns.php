@@ -53,7 +53,7 @@ class CreateSquareColumns extends Migration
     public function down()
     {
         foreach (self::$squareTables as $squareTable) {
-            if (! Schema::hasColumn($squareTable, 'square_id')) {
+            if (!Schema::hasColumn($squareTable, 'square_id')) {
                 continue;
             }
 

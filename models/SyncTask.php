@@ -27,7 +27,7 @@ class SyncTask extends Model
 
     public static function findBy(string $uuid)
     {
-        if (! $model = self::where('uuid', $uuid)->first()) {
+        if (!$model = self::where('uuid', $uuid)->first()) {
             throw new Exception('No sync task found for: '.$uuid);
         }
 
@@ -38,8 +38,8 @@ class SyncTask extends Model
     {
         return lang(
             $this->is_success
-            ? 'igniterlabs.squarepos::default.text_success'
-            : 'igniterlabs.squarepos::default.text_failed'
+                ? 'igniterlabs.squarepos::default.text_success'
+                : 'igniterlabs.squarepos::default.text_failed'
         );
     }
 
@@ -76,7 +76,7 @@ class SyncTask extends Model
 
     public function note(string $note)
     {
-        if (! is_null($this->syncJob->logsOutput)) {
+        if (!is_null($this->syncJob->logsOutput)) {
             $this->syncJob->logsOutput->writeln($note);
         }
 

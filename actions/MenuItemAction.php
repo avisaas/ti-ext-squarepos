@@ -127,7 +127,7 @@ class MenuItemAction extends ModelAction
         $result = [];
         $itemOptions = $this->model->menu_options ?? [];
         foreach ($itemOptions as $itemOption) {
-            if (! $itemOption->option->square_id) {
+            if (!$itemOption->option->square_id) {
                 continue;
             }
 

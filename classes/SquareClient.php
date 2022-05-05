@@ -32,7 +32,7 @@ class SquareClient
     {
         $response = $this->client->getLocationsApi()->listLocations();
 
-        if (! $response->isSuccess()) {
+        if (!$response->isSuccess()) {
             throw new ClientException($response);
         }
 
@@ -61,7 +61,7 @@ class SquareClient
 
         $response = $this->client->getCatalogApi()->searchCatalogObjects($body);
 
-        if (! $response->isSuccess()) {
+        if (!$response->isSuccess()) {
             throw new ClientException($response);
         }
 
@@ -72,7 +72,7 @@ class SquareClient
     {
         $response = $this->client->getCatalogApi()->listCatalog($cursor, $types);
 
-        if (! $response->isSuccess()) {
+        if (!$response->isSuccess()) {
             throw new ClientException($response);
         }
 
@@ -86,7 +86,7 @@ class SquareClient
 
         $response = $this->client->getCatalogApi()->batchRetrieveCatalogObjects($body);
 
-        if (! $response->isSuccess()) {
+        if (!$response->isSuccess()) {
             throw new ClientException($response);
         }
 
@@ -99,7 +99,7 @@ class SquareClient
 
         $response = $this->client->getCatalogApi()->batchUpsertCatalogObjects($body);
 
-        if (! $response->isSuccess()) {
+        if (!$response->isSuccess()) {
             throw new ClientException($response);
         }
 
@@ -113,7 +113,7 @@ class SquareClient
 
         $response = $this->client->getCatalogApi()->batchDeleteCatalogObjects($body);
 
-        if (! $response->isSuccess()) {
+        if (!$response->isSuccess()) {
             throw new ClientException($response);
         }
 
@@ -132,7 +132,7 @@ class SquareClient
 
         $response = $this->client->getInventoryApi()->batchChangeInventory($body);
 
-        if (! $response->isSuccess()) {
+        if (!$response->isSuccess()) {
             throw new ClientException($response);
         }
 

@@ -25,7 +25,8 @@ class PullItemOptions extends AbstractSyncPipe
 
             if ($catalogObject->getIsDeleted()) {
                 $model->newQuery()->where('square_id', $catalogObject->getId())->delete();
-            } else {
+            }
+            else {
                 $menuOption = $model->createFromSquareModifierList($catalogObject);
 
                 $menuOption->squareAttachLocation($catalogObject);
