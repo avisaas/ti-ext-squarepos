@@ -3,12 +3,12 @@
 namespace IgniterLabs\SquarePOS\Actions;
 
 use Igniter\Flame\Traits\ExtensionTrait;
+use Igniter\System\Actions\ModelAction;
 use IgniterLabs\SquarePOS\Models\SyncTask;
 use IgniterLabs\SquarePOS\Traits\LocationHelpers;
 use Illuminate\Support\Collection;
 use Square\Models\CatalogCategory;
 use Square\Models\CatalogObject;
-use System\Actions\ModelAction;
 
 class CategoryAction extends ModelAction
 {

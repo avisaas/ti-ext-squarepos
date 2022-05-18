@@ -2,7 +2,7 @@
 
 namespace IgniterLabs\SquarePOS\SyncPipes;
 
-use Admin\Models\Categories_model;
+use Igniter\Admin\Models\Category;
 use IgniterLabs\SquarePOS\Classes\CatalogResponse;
 use Illuminate\Support\Collection;
 use Square\Models\CatalogObjectBatch;
@@ -11,7 +11,7 @@ class PushCategories extends AbstractSyncPipe
 {
     public function execute()
     {
-        Categories_model::squareExportItems($this->syncTask, function ($categories) {
+        Category::squareExportItems($this->syncTask, function ($categories) {
             $this->syncTask->note('Exporting categories into square');
 
             $categories = $this->removeCleanVersions($categories);

@@ -2,14 +2,14 @@
 
 namespace IgniterLabs\SquarePOS\Controllers;
 
-use Admin\Classes\AdminController;
 use Exception;
+use Igniter\Admin\Classes\AdminController;
 use Igniter\Flame\Exception\ApplicationException;
+use Igniter\System\Traits\SessionMaker;
 use IgniterLabs\SquarePOS\Classes\Dispatcher;
 use IgniterLabs\SquarePOS\Jobs\SyncCatalogJob;
 use IgniterLabs\SquarePOS\Models\Settings;
 use Illuminate\Support\Facades\Redirect;
-use System\Traits\SessionMaker;
 
 class Merchant extends AdminController
 {
@@ -41,14 +41,16 @@ class Merchant extends AdminController
         try {
             if (strlen(input('error_message'))) {
                 flash()->error(input('error_message'));
-            } else {
+            }
+            else {
                 if ($this->getSession('state') !== input('state')) {
                     throw new ApplicationException('Access denied, invalid state');
                 }
 
                 Settings::storeConnectionData(input());
             }
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
             flash()->error($ex->getMessage());
         }
 

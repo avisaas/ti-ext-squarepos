@@ -2,13 +2,13 @@
 
 namespace IgniterLabs\SquarePOS\SyncPipes;
 
-use Admin\Models\Stocks_model;
+use Igniter\Admin\Models\Stock;
 
 class PushStocks extends AbstractSyncPipe
 {
     public function execute()
     {
-        Stocks_model::squareExportItems($this->syncTask, function ($stocks) {
+        Stock::squareExportItems($this->syncTask, function ($stocks) {
             $this->syncTask->note('Exporting menu item stocks into square');
 
             $stocks = $this->removeCleanVersions($stocks);

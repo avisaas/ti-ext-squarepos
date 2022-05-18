@@ -2,15 +2,15 @@
 
 namespace IgniterLabs\SquarePOS;
 
-use Admin\Models\Categories_model;
-use Admin\Models\Menu_option_values_model;
-use Admin\Models\Menu_options_model;
-use Admin\Models\Menus_model;
-use Admin\Models\Stocks_model;
+use Igniter\Admin\Models\Category;
+use Igniter\Admin\Models\Menu;
+use Igniter\Admin\Models\MenuOption;
+use Igniter\Admin\Models\MenuOptionValue;
+use Igniter\Admin\Models\Stock;
+use Igniter\System\Classes\BaseExtension;
 use IgniterLabs\SquarePOS\Classes\SquareClient;
 use IgniterLabs\SquarePOS\Commands\SyncCommand;
 use IgniterLabs\SquarePOS\Models\Settings;
-use System\Classes\BaseExtension;
 
 /**
  * Square POS Extension Information File
@@ -62,23 +62,23 @@ class Extension extends BaseExtension
 
     protected function extendCoreModels(): void
     {
-        Categories_model::extend(function ($model) {
+        Category::extend(function ($model) {
             $model->implement[] = \IgniterLabs\SquarePOS\Actions\CategoryAction::class;
         });
 
-        Menus_model::extend(function ($model) {
+        Menu::extend(function ($model) {
             $model->implement[] = \IgniterLabs\SquarePOS\Actions\MenuItemAction::class;
         });
 
-        Menu_options_model::extend(function ($model) {
+        MenuOption::extend(function ($model) {
             $model->implement[] = \IgniterLabs\SquarePOS\Actions\MenuOptionAction::class;
         });
 
-        Menu_option_values_model::extend(function ($model) {
+        MenuOptionValue::extend(function ($model) {
             $model->implement[] = \IgniterLabs\SquarePOS\Actions\MenuOptionValueAction::class;
         });
 
-        Stocks_model::extend(function ($model) {
+        Stock::extend(function ($model) {
             $model->implement[] = \IgniterLabs\SquarePOS\Actions\StockAction::class;
         });
     }

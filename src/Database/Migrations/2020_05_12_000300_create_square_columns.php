@@ -6,8 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSquareColumns extends Migration
-{
+return new class extends Migration {
     protected static $squareTables = [
         'menus',
         'categories',
@@ -79,4 +78,4 @@ class CreateSquareColumns extends Migration
             });
         }
     }
-}
+};

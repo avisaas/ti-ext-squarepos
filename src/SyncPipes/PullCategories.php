@@ -2,7 +2,7 @@
 
 namespace IgniterLabs\SquarePOS\SyncPipes;
 
-use Admin\Models\Categories_model;
+use Igniter\Admin\Models\Category;
 
 class PullCategories extends AbstractSyncPipe
 {
@@ -19,14 +19,15 @@ class PullCategories extends AbstractSyncPipe
 
         $nextBeingTime = now()->toISOString();
 
-        Categories_model::squareImportItems($response->getObjects(), function ($catalogObject, $model) {
+        Category::squareImportItems($response->getObjects(), function ($catalogObject, $model) {
             $this->syncTask->note('Importing categories from square');
 
             if ($catalogObject->getIsDeleted()) {
                 if ($model->newQuery()->where('square_id', $catalogObject->getId())->delete()) {
                     $this->syncTask->noteDeleted($catalogObject, $catalogObject->getCategoryData()->getName());
                 }
-            } else {
+            }
+            else {
                 $category = $model->createFromSquareCategory($catalogObject);
 
                 $category->squareAttachLocation($catalogObject);

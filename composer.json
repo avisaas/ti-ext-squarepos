@@ -15,6 +15,11 @@
     "friendsofphp/php-cs-fixer": "^3.0",
     "pestphp/pest": "^1.20"
   },
+  "autoload": {
+    "psr-4": {
+      "IgniterLabs\\SquarePOS\\": "src/"
+    }
+  },
   "extra": {
     "tastyigniter-extension": {
       "code": "igniterlabs.squarepos",

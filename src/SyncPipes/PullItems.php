@@ -2,7 +2,7 @@
 
 namespace IgniterLabs\SquarePOS\SyncPipes;
 
-use Admin\Models\Menus_model;
+use Igniter\Admin\Models\Menu;
 use Square\Models\CatalogObject;
 
 class PullItems extends AbstractSyncPipe
@@ -22,7 +22,7 @@ class PullItems extends AbstractSyncPipe
 
         $this->syncTask->setConfigData('beginTimes.item', now()->toISOString())->save();
 
-        Menus_model::squareImportItems($response->getObjects(), function (CatalogObject $catalogObject, $model) {
+        Menu::squareImportItems($response->getObjects(), function (CatalogObject $catalogObject, $model) {
             $this->syncTask->note('Importing menu items from square');
 
             if ($catalogObject->getIsDeleted()) {

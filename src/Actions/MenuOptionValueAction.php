@@ -3,11 +3,11 @@
 namespace IgniterLabs\SquarePOS\Actions;
 
 use Igniter\Flame\Traits\ExtensionTrait;
+use Igniter\System\Actions\ModelAction;
 use IgniterLabs\SquarePOS\Traits\LocationHelpers;
 use Square\Models\CatalogModifier;
 use Square\Models\CatalogObject;
 use Square\Models\Money;
-use System\Actions\ModelAction;
 
 class MenuOptionValueAction extends ModelAction
 {

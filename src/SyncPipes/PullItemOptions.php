@@ -2,7 +2,7 @@
 
 namespace IgniterLabs\SquarePOS\SyncPipes;
 
-use Admin\Models\Menu_options_model;
+use Igniter\Admin\Models\MenuOption;
 use Square\Models\CatalogObject;
 
 class PullItemOptions extends AbstractSyncPipe
@@ -20,12 +20,13 @@ class PullItemOptions extends AbstractSyncPipe
 
         $response = $this->square->searchCatalogObjects($options, true);
 
-        Menu_options_model::squareImportItems($response->getObjects(), function (CatalogObject $catalogObject, $model) {
+        MenuOption::squareImportItems($response->getObjects(), function (CatalogObject $catalogObject, $model) {
             $this->syncTask->note('Importing menu options from square');
 
             if ($catalogObject->getIsDeleted()) {
                 $model->newQuery()->where('square_id', $catalogObject->getId())->delete();
-            } else {
+            }
+            else {
                 $menuOption = $model->createFromSquareModifierList($catalogObject);
 
                 $menuOption->squareAttachLocation($catalogObject);

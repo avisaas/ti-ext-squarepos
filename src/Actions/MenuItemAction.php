@@ -3,6 +3,7 @@
 namespace IgniterLabs\SquarePOS\Actions;
 
 use Igniter\Flame\Traits\ExtensionTrait;
+use Igniter\System\Actions\ModelAction;
 use IgniterLabs\SquarePOS\Models\SyncTask;
 use IgniterLabs\SquarePOS\Traits\LocationHelpers;
 use Illuminate\Support\Collection;
@@ -12,7 +13,6 @@ use Square\Models\CatalogItemVariation;
 use Square\Models\CatalogObject;
 use Square\Models\ItemVariationLocationOverrides;
 use Square\Models\Money;
-use System\Actions\ModelAction;
 
 class MenuItemAction extends ModelAction
 {

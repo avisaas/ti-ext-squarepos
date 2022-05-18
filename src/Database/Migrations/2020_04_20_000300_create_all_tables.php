@@ -6,8 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAllTables extends Migration
-{
+return new class extends Migration {
     public function up()
     {
         if (Schema::hasTable('igniterlabs_squarepos_tasks')) {
@@ -31,4 +30,4 @@ class CreateAllTables extends Migration
     {
         Schema::dropIfExists('igniterlabs_squarepos_tasks');
     }
-}
+};

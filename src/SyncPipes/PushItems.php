@@ -2,7 +2,7 @@
 
 namespace IgniterLabs\SquarePOS\SyncPipes;
 
-use Admin\Models\Menus_model;
+use Igniter\Admin\Models\Menu;
 use IgniterLabs\SquarePOS\Classes\CatalogResponse;
 use Illuminate\Support\Collection;
 use Square\Models\CatalogObjectBatch;
@@ -11,7 +11,7 @@ class PushItems extends AbstractSyncPipe
 {
     public function execute()
     {
-        Menus_model::squareExportItems($this->syncTask, function ($menuItems) {
+        Menu::squareExportItems($this->syncTask, function ($menuItems) {
             $this->syncTask->note('Exporting menu items into square');
 
             $menuItems = $this->removeCleanVersions($menuItems);

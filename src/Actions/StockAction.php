@@ -3,11 +3,11 @@
 namespace IgniterLabs\SquarePOS\Actions;
 
 use Igniter\Flame\Traits\ExtensionTrait;
+use Igniter\System\Actions\ModelAction;
 use IgniterLabs\SquarePOS\Models\SyncTask;
 use IgniterLabs\SquarePOS\Traits\LocationHelpers;
 use Square\Models\InventoryChange;
 use Square\Models\InventoryPhysicalCount;
-use System\Actions\ModelAction;
 
 class StockAction extends ModelAction
 {
