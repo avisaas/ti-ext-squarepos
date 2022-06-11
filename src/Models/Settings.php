@@ -40,8 +40,7 @@ class Settings extends Model
                 ->mapWithKeys(function (Location $location) {
                     return [$location->getId() => $location->getName()];
                 })->all();
-        }
-        catch (ClientException $ex) {
+        } catch (ClientException $ex) {
             flash()->error($ex->getMessage())->now();
         }
 
