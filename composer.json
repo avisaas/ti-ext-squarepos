@@ -9,6 +9,7 @@
     }
   ],
   "require": {
+    "tastyigniter/flame": "v4.x-dev",
     "square/square": "*"
   },
   "require-dev": {
