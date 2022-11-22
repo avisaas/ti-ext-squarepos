@@ -2,8 +2,8 @@
 
 namespace IgniterLabs\SquarePOS\Classes;
 
-use Igniter\Flame\Support\Facades\Str;
 use IgniterLabs\SquarePOS\Exceptions\ClientException;
+use Illuminate\Support\Str;
 use Square\Environment;
 use Square\Models\BatchChangeInventoryRequest;
 use Square\Models\BatchDeleteCatalogObjectsRequest;
