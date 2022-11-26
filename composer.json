@@ -1,6 +1,6 @@
 {
   "name": "igniterlabs/ti-ext-squarepos",
-  "type": "tastyigniter-extension",
+  "type": "tastyigniter-package",
   "description": "Sync menu and order data between TastyIgniter and Square POS.",
   "license": "MIT",
   "authors": [
