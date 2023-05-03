@@ -30,7 +30,6 @@ class CatalogResponse
     }
 
     /**
-     * @param $clientId
      * @return null|\Square\Models\CatalogIdMapping
      */
     public function getMapping($clientId)
@@ -39,7 +38,6 @@ class CatalogResponse
     }
 
     /**
-     * @param $id
      * @return null|\Square\Models\CatalogObject
      */
     public function getObject($id)

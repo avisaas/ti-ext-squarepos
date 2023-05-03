@@ -13,9 +13,6 @@ abstract class AbstractSyncPipe
      */
     protected $square;
 
-    /**
-     * @var \IgniterLabs\SquarePOS\Models\SyncTask
-     */
     protected SyncTask $syncTask;
 
     public function __construct(SyncTask $syncTask)

@@ -47,7 +47,7 @@ class SyncCatalogJob implements ShouldQueue
             });
 
             $syncTask->markAsComplete();
-        } catch (Throwable | Exception $ex) {
+        } catch (Throwable|Exception $ex) {
             $syncTask->saveException($ex);
 
             throw $ex;

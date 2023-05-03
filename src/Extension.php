@@ -57,7 +57,7 @@ class Extension extends BaseExtension
 
     public function registerSchedule($schedule)
     {
-//        $schedule->call('square::sync-inventory')->everyMinute();
+        //        $schedule->call('square::sync-inventory')->everyMinute();
     }
 
     protected function extendCoreModels(): void
