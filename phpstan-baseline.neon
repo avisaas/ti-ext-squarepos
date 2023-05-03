@@ -1,0 +1,316 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Class Admin\\\\Models\\\\Location not found\\.$#"
+			count: 1
+			path: resources/models/settings.php
+
+		-
+			message: "#^Function admin_url not found\\.$#"
+			count: 2
+			path: resources/views/settings/field_connection.blade.php
+
+		-
+			message: "#^Function lang not found\\.$#"
+			count: 2
+			path: resources/views/settings/field_connection.blade.php
+
+		-
+			message: "#^Function admin_url not found\\.$#"
+			count: 1
+			path: resources/views/settings/field_import_menus.blade.php
+
+		-
+			message: "#^Function lang not found\\.$#"
+			count: 1
+			path: resources/views/settings/field_import_menus.blade.php
+
+		-
+			message: "#^Function admin_url not found\\.$#"
+			count: 1
+			path: resources/views/settings/field_manual_sync.blade.php
+
+		-
+			message: "#^Function lang not found\\.$#"
+			count: 1
+			path: resources/views/settings/field_manual_sync.blade.php
+
+		-
+			message: "#^Access to an undefined property IgniterLabs\\\\SquarePOS\\\\Actions\\\\CategoryAction\\:\\:\\$model\\.$#"
+			count: 15
+			path: src/Actions/CategoryAction.php
+
+		-
+			message: "#^Function array_get not found\\.$#"
+			count: 2
+			path: src/Actions/CategoryAction.php
+
+		-
+			message: "#^Access to an undefined property IgniterLabs\\\\SquarePOS\\\\Actions\\\\MenuItemAction\\:\\:\\$model\\.$#"
+			count: 23
+			path: src/Actions/MenuItemAction.php
+
+		-
+			message: "#^Function array_get not found\\.$#"
+			count: 2
+			path: src/Actions/MenuItemAction.php
+
+		-
+			message: "#^Function currency not found\\.$#"
+			count: 1
+			path: src/Actions/MenuItemAction.php
+
+		-
+			message: "#^Access to an undefined property IgniterLabs\\\\SquarePOS\\\\Actions\\\\MenuOptionAction\\:\\:\\$model\\.$#"
+			count: 17
+			path: src/Actions/MenuOptionAction.php
+
+		-
+			message: "#^Function array_get not found\\.$#"
+			count: 2
+			path: src/Actions/MenuOptionAction.php
+
+		-
+			message: "#^Access to an undefined property IgniterLabs\\\\SquarePOS\\\\Actions\\\\MenuOptionValueAction\\:\\:\\$model\\.$#"
+			count: 16
+			path: src/Actions/MenuOptionValueAction.php
+
+		-
+			message: "#^Function array_get not found\\.$#"
+			count: 2
+			path: src/Actions/MenuOptionValueAction.php
+
+		-
+			message: "#^Function currency not found\\.$#"
+			count: 1
+			path: src/Actions/MenuOptionValueAction.php
+
+		-
+			message: "#^Access to an undefined property IgniterLabs\\\\SquarePOS\\\\Actions\\\\StockAction\\:\\:\\$model\\.$#"
+			count: 14
+			path: src/Actions/StockAction.php
+
+		-
+			message: "#^Function array_get not found\\.$#"
+			count: 2
+			path: src/Actions/StockAction.php
+
+		-
+			message: "#^Function make_carbon not found\\.$#"
+			count: 1
+			path: src/Actions/StockAction.php
+
+		-
+			message: "#^Call to an undefined static method IgniterLabs\\\\SquarePOS\\\\Models\\\\SyncTask\\:\\:firstOrCreate\\(\\)\\.$#"
+			count: 1
+			path: src/Classes/Dispatcher.php
+
+		-
+			message: "#^Unsafe usage of new static\\(\\)\\.$#"
+			count: 1
+			path: src/Classes/Dispatcher.php
+
+		-
+			message: "#^Function array_get not found\\.$#"
+			count: 2
+			path: src/Classes/SquareClient.php
+
+		-
+			message: "#^Call to an undefined method IgniterLabs\\\\SquarePOS\\\\Controllers\\\\Merchant\\:\\:getSession\\(\\)\\.$#"
+			count: 2
+			path: src/Controllers/Merchant.php
+
+		-
+			message: "#^Call to an undefined method IgniterLabs\\\\SquarePOS\\\\Controllers\\\\Merchant\\:\\:putSession\\(\\)\\.$#"
+			count: 2
+			path: src/Controllers/Merchant.php
+
+		-
+			message: "#^Function admin_url not found\\.$#"
+			count: 4
+			path: src/Controllers/Merchant.php
+
+		-
+			message: "#^Function flash not found\\.$#"
+			count: 3
+			path: src/Controllers/Merchant.php
+
+		-
+			message: "#^Function input not found\\.$#"
+			count: 4
+			path: src/Controllers/Merchant.php
+
+		-
+			message: "#^Function str_random not found\\.$#"
+			count: 1
+			path: src/Controllers/Merchant.php
+
+		-
+			message: "#^Instantiated class Igniter\\\\Flame\\\\Exception\\\\ApplicationException not found\\.$#"
+			count: 1
+			path: src/Controllers/Merchant.php
+
+		-
+			message: "#^Access to an undefined property IgniterLabs\\\\SquarePOS\\\\Extension\\:\\:\\$app\\.$#"
+			count: 1
+			path: src/Extension.php
+
+		-
+			message: "#^Call to an undefined method IgniterLabs\\\\SquarePOS\\\\Extension\\:\\:registerConsoleCommand\\(\\)\\.$#"
+			count: 1
+			path: src/Extension.php
+
+		-
+			message: "#^Call to static method extend\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\Category\\.$#"
+			count: 1
+			path: src/Extension.php
+
+		-
+			message: "#^Call to static method extend\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\Menu\\.$#"
+			count: 1
+			path: src/Extension.php
+
+		-
+			message: "#^Call to static method extend\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\MenuOption\\.$#"
+			count: 1
+			path: src/Extension.php
+
+		-
+			message: "#^Call to static method extend\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\MenuOptionValue\\.$#"
+			count: 1
+			path: src/Extension.php
+
+		-
+			message: "#^Call to static method extend\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\Stock\\.$#"
+			count: 1
+			path: src/Extension.php
+
+		-
+			message: "#^Call to an undefined static method IgniterLabs\\\\SquarePOS\\\\Models\\\\Settings\\:\\:get\\(\\)\\.$#"
+			count: 6
+			path: src/Models/Settings.php
+
+		-
+			message: "#^Call to an undefined static method IgniterLabs\\\\SquarePOS\\\\Models\\\\Settings\\:\\:set\\(\\)\\.$#"
+			count: 3
+			path: src/Models/Settings.php
+
+		-
+			message: "#^Class Igniter\\\\System\\\\Actions\\\\SettingsModel not found\\.$#"
+			count: 1
+			path: src/Models/Settings.php
+
+		-
+			message: "#^Function array_get not found\\.$#"
+			count: 1
+			path: src/Models/Settings.php
+
+		-
+			message: "#^Function array_only not found\\.$#"
+			count: 1
+			path: src/Models/Settings.php
+
+		-
+			message: "#^Function flash not found\\.$#"
+			count: 1
+			path: src/Models/Settings.php
+
+		-
+			message: "#^Access to an undefined property IgniterLabs\\\\SquarePOS\\\\Models\\\\SyncTask\\:\\:\\$attributes\\.$#"
+			count: 1
+			path: src/Models/SyncTask.php
+
+		-
+			message: "#^Access to an undefined property IgniterLabs\\\\SquarePOS\\\\Models\\\\SyncTask\\:\\:\\$config_data\\.$#"
+			count: 6
+			path: src/Models/SyncTask.php
+
+		-
+			message: "#^Access to an undefined property IgniterLabs\\\\SquarePOS\\\\Models\\\\SyncTask\\:\\:\\$created_at\\.$#"
+			count: 1
+			path: src/Models/SyncTask.php
+
+		-
+			message: "#^Access to an undefined property IgniterLabs\\\\SquarePOS\\\\Models\\\\SyncTask\\:\\:\\$exception\\.$#"
+			count: 2
+			path: src/Models/SyncTask.php
+
+		-
+			message: "#^Access to an undefined property IgniterLabs\\\\SquarePOS\\\\Models\\\\SyncTask\\:\\:\\$is_success\\.$#"
+			count: 2
+			path: src/Models/SyncTask.php
+
+		-
+			message: "#^Access to an undefined property IgniterLabs\\\\SquarePOS\\\\Models\\\\SyncTask\\:\\:\\$type\\.$#"
+			count: 1
+			path: src/Models/SyncTask.php
+
+		-
+			message: "#^Call to an undefined method IgniterLabs\\\\SquarePOS\\\\Models\\\\SyncTask\\:\\:save\\(\\)\\.$#"
+			count: 3
+			path: src/Models/SyncTask.php
+
+		-
+			message: "#^Call to an undefined static method IgniterLabs\\\\SquarePOS\\\\Models\\\\SyncTask\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: src/Models/SyncTask.php
+
+		-
+			message: "#^Function array_forget not found\\.$#"
+			count: 1
+			path: src/Models/SyncTask.php
+
+		-
+			message: "#^Function array_get not found\\.$#"
+			count: 2
+			path: src/Models/SyncTask.php
+
+		-
+			message: "#^Function array_set not found\\.$#"
+			count: 1
+			path: src/Models/SyncTask.php
+
+		-
+			message: "#^Function lang not found\\.$#"
+			count: 1
+			path: src/Models/SyncTask.php
+
+		-
+			message: "#^Function time_elapsed not found\\.$#"
+			count: 1
+			path: src/Models/SyncTask.php
+
+		-
+			message: "#^Call to static method squareImportItems\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\Category\\.$#"
+			count: 1
+			path: src/SyncPipes/PullCategories.php
+
+		-
+			message: "#^Call to static method squareImportItems\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\MenuOption\\.$#"
+			count: 1
+			path: src/SyncPipes/PullItemOptions.php
+
+		-
+			message: "#^Call to static method squareImportItems\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\Menu\\.$#"
+			count: 1
+			path: src/SyncPipes/PullItems.php
+
+		-
+			message: "#^Call to static method squareExportItems\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\Category\\.$#"
+			count: 1
+			path: src/SyncPipes/PushCategories.php
+
+		-
+			message: "#^Call to static method squareExportItems\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\MenuOption\\.$#"
+			count: 1
+			path: src/SyncPipes/PushItemOptions.php
+
+		-
+			message: "#^Call to static method squareExportItems\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\Menu\\.$#"
+			count: 1
+			path: src/SyncPipes/PushItems.php
+
+		-
+			message: "#^Call to static method squareExportItems\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\Stock\\.$#"
+			count: 1
+			path: src/SyncPipes/PushStocks.php
