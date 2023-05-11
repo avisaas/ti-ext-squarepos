@@ -8,6 +8,9 @@
 			"name": "Igniter Labs Team"
 		}
 	],
+	"require": {
+		"square/square": "*"
+	},
 	"require-dev": {
 		"laravel/pint": "^1.2",
 		"nunomaduro/larastan": "^2.4.0",
@@ -50,8 +53,5 @@
 			"composer/installers": true
 		},
 		"sort-packages": true
-	},
-	"require": {
-		"square/square": "*"
 	}
 }
