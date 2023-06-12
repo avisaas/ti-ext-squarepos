@@ -2,7 +2,7 @@
 
 namespace IgniterLabs\SquarePOS\SyncPipes;
 
-use Igniter\Admin\Models\MenuOption;
+use Igniter\Cart\Models\MenuOption;
 use IgniterLabs\SquarePOS\Classes\CatalogResponse;
 use Illuminate\Support\Collection;
 use Square\Models\CatalogObjectBatch;

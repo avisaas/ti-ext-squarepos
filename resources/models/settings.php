@@ -76,7 +76,7 @@ return [
                             'client_id' => [
                                 'label' => 'igniterlabs.squarepos::default.label_client_location',
                                 'type' => 'select',
-                                'options' => [\Admin\Models\Location::class, 'getDropdownOptions'],
+                                'options' => [\Igniter\Local\Models\Location::class, 'getDropdownOptions'],
                             ],
                         ],
                     ],

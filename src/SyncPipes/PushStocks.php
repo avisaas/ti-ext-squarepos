@@ -2,7 +2,7 @@
 
 namespace IgniterLabs\SquarePOS\SyncPipes;
 
-use Igniter\Admin\Models\Stock;
+use Igniter\Cart\Models\Stock;
 
 class PushStocks extends AbstractSyncPipe
 {

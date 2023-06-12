@@ -2,7 +2,7 @@
 
 namespace IgniterLabs\SquarePOS\SyncPipes;
 
-use Igniter\Admin\Models\MenuOption;
+use Igniter\Cart\Models\MenuOption;
 use Square\Models\CatalogObject;
 
 class PullItemOptions extends AbstractSyncPipe

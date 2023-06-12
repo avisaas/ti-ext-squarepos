@@ -2,7 +2,7 @@
 
 namespace IgniterLabs\SquarePOS\SyncPipes;
 
-use Igniter\Admin\Models\Category;
+use Igniter\Cart\Models\Category;
 
 class PullCategories extends AbstractSyncPipe
 {

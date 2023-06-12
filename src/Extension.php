@@ -2,11 +2,11 @@
 
 namespace IgniterLabs\SquarePOS;
 
-use Igniter\Admin\Models\Category;
-use Igniter\Admin\Models\Menu;
-use Igniter\Admin\Models\MenuOption;
-use Igniter\Admin\Models\MenuOptionValue;
-use Igniter\Admin\Models\Stock;
+use Igniter\Cart\Models\Category;
+use Igniter\Cart\Models\Menu;
+use Igniter\Cart\Models\MenuOption;
+use Igniter\Cart\Models\MenuOptionValue;
+use Igniter\Cart\Models\Stock;
 use Igniter\System\Classes\BaseExtension;
 use IgniterLabs\SquarePOS\Classes\SquareClient;
 use IgniterLabs\SquarePOS\Commands\SyncCommand;
