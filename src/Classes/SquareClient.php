@@ -68,7 +68,7 @@ class SquareClient
         return new CatalogResponse($response->getResult());
     }
 
-    public function listCatalogObjects(string $types, ?string $cursor = null)
+    public function listCatalogObjects(string $types, string $cursor = null)
     {
         $response = $this->client->getCatalogApi()->listCatalog($cursor, $types);
 
