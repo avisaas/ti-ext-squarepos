@@ -8,7 +8,7 @@ use Throwable;
 
 class ClientException extends Exception
 {
-    public function __construct($message = '', $code = 0, Throwable $previous = null)
+    public function __construct($message = '', $code = 0, ?Throwable $previous = null)
     {
         if ($message instanceof ApiResponse) {
             $message = implode(PHP_EOL, array_map(function ($error) {
