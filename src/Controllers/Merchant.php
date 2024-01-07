@@ -4,7 +4,7 @@ namespace IgniterLabs\SquarePOS\Controllers;
 
 use Exception;
 use Igniter\Admin\Classes\AdminController;
-use Igniter\Flame\Exception\ApplicationException;
+use Igniter\Flame\Exception\FlashException;
 use Igniter\System\Traits\SessionMaker;
 use IgniterLabs\SquarePOS\Classes\Dispatcher;
 use IgniterLabs\SquarePOS\Jobs\SyncCatalogJob;
@@ -43,7 +43,7 @@ class Merchant extends AdminController
                 flash()->error(input('error_message'));
             } else {
                 if ($this->getSession('state') !== input('state')) {
-                    throw new ApplicationException('Access denied, invalid state');
+                    throw new FlashException('Access denied, invalid state');
                 }
 
                 Settings::storeConnectionData(input());

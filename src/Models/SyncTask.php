@@ -2,8 +2,8 @@
 
 namespace IgniterLabs\SquarePOS\Models;
 
-use Exception;
 use Igniter\Flame\Database\Model;
+use IgniterLabs\SquarePOS\Exceptions\SyncException;
 use Throwable;
 
 class SyncTask extends Model
@@ -28,7 +28,7 @@ class SyncTask extends Model
     public static function findBy(string $uuid)
     {
         if (!$model = self::where('uuid', $uuid)->first()) {
-            throw new Exception('No sync task found for: '.$uuid);
+            throw new SyncException('No sync task found for: '.$uuid);
         }
 
         return $model;
