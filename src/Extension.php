@@ -32,7 +32,7 @@ class Extension extends BaseExtension
     {
     }
 
-    public function registerPermissions()
+    public function registerPermissions(): array
     {
         return [
             'IgniterLabs.SquarePOS.Manage' => [
@@ -42,7 +42,7 @@ class Extension extends BaseExtension
         ];
     }
 
-    public function registerSettings()
+    public function registerSettings(): array
     {
         return [
             'settings' => [
@@ -55,7 +55,7 @@ class Extension extends BaseExtension
         ];
     }
 
-    public function registerSchedule($schedule)
+    public function registerSchedule(string $schedule)
     {
         //        $schedule->call('square::sync-inventory')->everyMinute();
     }

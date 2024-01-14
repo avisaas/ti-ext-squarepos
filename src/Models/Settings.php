@@ -17,11 +17,11 @@ class Settings extends Model
 
     protected static $locationCache;
 
-    public $implement = [\Igniter\System\Actions\SettingsModel::class];
+    public array $implement = [\Igniter\System\Actions\SettingsModel::class];
 
-    public $settingsCode = 'igniterlabs_squarepos_settings';
+    public string $settingsCode = 'igniterlabs_squarepos_settings';
 
-    public $settingsFieldsConfig = 'settings';
+    public string $settingsFieldsConfig = 'settings';
 
     public function getRemoteIdOptions()
     {

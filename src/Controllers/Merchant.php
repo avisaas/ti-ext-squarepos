@@ -15,7 +15,7 @@ class Merchant extends AdminController
 {
     use SessionMaker;
 
-    protected $requiredPermissions = ['IgniterLabs.SquarePOS.Manage'];
+    protected null|string|array $requiredPermissions = ['IgniterLabs.SquarePOS.Manage'];
 
     protected $settingsUri = 'extensions/edit/igniterlabs/squarepos/settings';
 
