@@ -11,6 +11,7 @@ use Igniter\System\Classes\BaseExtension;
 use IgniterLabs\SquarePOS\Classes\SquareClient;
 use IgniterLabs\SquarePOS\Commands\SyncCommand;
 use IgniterLabs\SquarePOS\Models\Settings;
+use Illuminate\Console\Scheduling\Schedule;
 
 /**
  * Square POS Extension Information File
@@ -55,7 +56,7 @@ class Extension extends BaseExtension
         ];
     }
 
-    public function registerSchedule(string $schedule)
+    public function registerSchedule(Schedule $schedule)
     {
         //        $schedule->call('square::sync-inventory')->everyMinute();
     }
