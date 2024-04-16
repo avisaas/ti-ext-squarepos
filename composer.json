@@ -9,14 +9,14 @@
         }
     ],
     "require": {
-        "square/square": "*"
+        "square/square": "*",
+        "tastyigniter/core": "dev-master"
     },
     "require-dev": {
         "laravel/pint": "^1.2",
         "nunomaduro/larastan": "^2.4.0",
         "orchestra/testbench": "^8.5",
-        "pestphp/pest-plugin-laravel": "^2.0",
-        "tastyigniter/core": "dev-master"
+        "pestphp/pest-plugin-laravel": "^2.0"
     },
     "autoload": {
         "psr-4": {
