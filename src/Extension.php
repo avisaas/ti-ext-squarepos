@@ -38,7 +38,7 @@ class Extension extends BaseExtension
         return [
             'IgniterLabs.SquarePOS.Manage' => [
                 'description' => 'Manage Square POS for TastyIgniter settings',
-                'group' => 'menu',
+                'group' => 'igniter.cart::default.text_permission_menu_group',
             ],
         ];
     }
