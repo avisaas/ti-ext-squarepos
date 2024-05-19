@@ -22,7 +22,7 @@ class PullItems extends AbstractSyncPipe
 
         $this->syncTask->setConfigData('beginTimes.item', now()->toISOString())->save();
 
-        Menu::squareImportItems($response->getObjects(), function (CatalogObject $catalogObject, $model) {
+        Menu::squareImportItems($response->getObjects(), function(CatalogObject $catalogObject, $model) {
             $this->syncTask->note('Importing menu items from square');
 
             if ($catalogObject->getIsDeleted()) {

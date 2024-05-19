@@ -11,7 +11,7 @@ class PushItems extends AbstractSyncPipe
 {
     public function execute()
     {
-        Menu::squareExportItems($this->syncTask, function ($menuItems) {
+        Menu::squareExportItems($this->syncTask, function($menuItems) {
             $this->syncTask->note('Exporting menu items into square');
 
             $menuItems = $this->removeCleanVersions($menuItems);
@@ -34,7 +34,7 @@ class PushItems extends AbstractSyncPipe
 
         $response = $this->square->batchRetrieveCatalogObjects($mappedIds);
 
-        return $menuItems->filter(function ($menuItem) use ($response) {
+        return $menuItems->filter(function($menuItem) use ($response) {
             if (is_null($menuItem->square_id) || is_null($menuItem->square_variation_id)) {
                 return true;
             }
@@ -65,7 +65,7 @@ class PushItems extends AbstractSyncPipe
 
     protected function makeCatalogBatch(Collection $menuItems)
     {
-        $batch = $menuItems->map(function ($menuItem) {
+        $batch = $menuItems->map(function($menuItem) {
             return $menuItem->asSquareItem();
         })->values()->all();
 
@@ -74,7 +74,7 @@ class PushItems extends AbstractSyncPipe
 
     protected function updateSquareAttributes(Collection $menuItems, CatalogResponse $response)
     {
-        $menuItems->each(function ($menuItem) use ($response) {
+        $menuItems->each(function($menuItem) use ($response) {
             if ($idMapping = $response->getMapping($menuItem->getSquareId())) {
                 $menuItem->square_id = $idMapping->getObjectId();
             }

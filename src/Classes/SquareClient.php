@@ -39,7 +39,7 @@ class SquareClient
         $result = $response->getResult()->getLocations();
 
         return collect($result)
-            ->filter(function (Location $location) {
+            ->filter(function(Location $location) {
                 return $location->getStatus() === 'ACTIVE'
                     && in_array('CREDIT_CARD_PROCESSING', (array)$location->getCapabilities(), true);
             })->values();

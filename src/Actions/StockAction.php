@@ -20,7 +20,7 @@ class StockAction extends ModelAction
             ->with(['stockable', 'location'])
             ->whereNotNull('quantity')
             ->where('stockable_type', 'menus')
-            ->whereHas('stockable', function ($query) {
+            ->whereHas('stockable', function($query) {
                 $query->whereNotNull('square_variation_id');
             })
             ->whereHasOrDoesntHaveLocation(array_keys($syncTask->mappedLocationIds()))

@@ -26,9 +26,9 @@ class CategoryAction extends ModelAction
 
     public function squareImportItems(Collection $catalogObjects, callable $callback)
     {
-        $catalogObjects->filter(function (CatalogObject $catalogObject) {
+        $catalogObjects->filter(function(CatalogObject $catalogObject) {
             return strtoupper($catalogObject->getType()) === 'CATEGORY';
-        })->each(function (CatalogObject $catalogObject, $squareId) use ($callback) {
+        })->each(function(CatalogObject $catalogObject, $squareId) use ($callback) {
             $callback($catalogObject, $this->model);
         });
     }

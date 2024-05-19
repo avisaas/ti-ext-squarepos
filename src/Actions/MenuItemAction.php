@@ -30,9 +30,9 @@ class MenuItemAction extends ModelAction
 
     public function squareImportItems(Collection $catalogObjects, callable $callback)
     {
-        $catalogObjects->filter(function (CatalogObject $catalogObject) {
+        $catalogObjects->filter(function(CatalogObject $catalogObject) {
             return strtoupper($catalogObject->getType()) === 'ITEM';
-        })->each(function (CatalogObject $catalogObject, $squareId) use ($callback) {
+        })->each(function(CatalogObject $catalogObject, $squareId) use ($callback) {
             $callback($catalogObject, $this->model);
         });
     }
@@ -108,10 +108,10 @@ class MenuItemAction extends ModelAction
     protected function makeSquareLocationOverrideObjects()
     {
         return $this->model->getAvailableStocks()
-            ->filter(function ($stock) {
+            ->filter(function($stock) {
                 return (bool)$stock->squareLocationRemoteId();
             })
-            ->map(function ($stock) {
+            ->map(function($stock) {
                 $itemVariationOverrides = new ItemVariationLocationOverrides();
                 $itemVariationOverrides->setTrackInventory((bool)$stock->is_tracked);
                 $itemVariationOverrides->setInventoryAlertType($stock->low_stock_alert ? 'LOW_QUANTITY' : 'NONE');

@@ -16,14 +16,14 @@ class CatalogResponse
 
         if (method_exists($response, 'getIdMappings')) {
             $this->idMappings = collect($response->getIdMappings() ?? [])
-                ->keyBy(function ($idMapping) {
+                ->keyBy(function($idMapping) {
                     return $idMapping->getClientObjectId();
                 });
         }
 
         if (method_exists($response, 'getObjects')) {
             $this->catalogObjects = collect($response->getObjects() ?? [])
-                ->keyBy(function ($catalogObject) {
+                ->keyBy(function($catalogObject) {
                     return $catalogObject->getId();
                 });
         }

@@ -11,7 +11,7 @@ class PushItemOptions extends AbstractSyncPipe
 {
     public function execute()
     {
-        MenuOption::squareExportItems($this->syncTask, function ($menuOptions) {
+        MenuOption::squareExportItems($this->syncTask, function($menuOptions) {
             $this->syncTask->note('Exporting menu options into square');
 
             $menuOptions = $this->removeCleanVersions($menuOptions);
@@ -34,7 +34,7 @@ class PushItemOptions extends AbstractSyncPipe
 
         $response = $this->square->batchRetrieveCatalogObjects($mappedIds);
 
-        return $exportItems->filter(function ($exportItem) use ($response) {
+        return $exportItems->filter(function($exportItem) use ($response) {
             if (is_null($exportItem->square_id)) {
                 return true;
             }
@@ -59,11 +59,11 @@ class PushItemOptions extends AbstractSyncPipe
 
     protected function makeCatalogBatch(Collection $menuOptions)
     {
-        $batch = $menuOptions->map(function ($menuOption) {
+        $batch = $menuOptions->map(function($menuOption) {
             $itemObject = $menuOption->asSquareModifierList();
 
             $modifiers = collect($menuOption->option_values ?? [])
-                ->map(function ($menuOptionValue) {
+                ->map(function($menuOptionValue) {
                     return $menuOptionValue->asSquareModifier();
                 })->all();
 
@@ -77,7 +77,7 @@ class PushItemOptions extends AbstractSyncPipe
 
     protected function updateSquareAttributes($menuOptions, CatalogResponse $response)
     {
-        $menuOptions->each(function ($menuOption) use ($response) {
+        $menuOptions->each(function($menuOption) use ($response) {
             if ($idMapping = $response->getMapping($menuOption->getSquareId())) {
                 $menuOption->square_id = $idMapping->getObjectId();
             }
@@ -97,11 +97,11 @@ class PushItemOptions extends AbstractSyncPipe
 
     protected function updateValueSquareAttributes($menuOptionValues, $response, $catalogObject)
     {
-        $modifiers = collect($catalogObject->getModifierListData()->getModifiers())->keyBy(function ($catalogObject) {
+        $modifiers = collect($catalogObject->getModifierListData()->getModifiers())->keyBy(function($catalogObject) {
             return $catalogObject->getId();
         });
 
-        $menuOptionValues->each(function ($menuOptionValue) use ($response, $modifiers) {
+        $menuOptionValues->each(function($menuOptionValue) use ($response, $modifiers) {
             if ($idMapping = $response->getMapping($menuOptionValue->getSquareId())) {
                 $menuOptionValue->square_id = $idMapping->getObjectId();
             }

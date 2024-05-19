@@ -12,7 +12,7 @@ return new class() extends Migration
             return;
         }
 
-        Schema::create('igniterlabs_squarepos_tasks', function (Blueprint $table) {
+        Schema::create('igniterlabs_squarepos_tasks', function(Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('uuid');
             $table->string('type');

@@ -26,7 +26,7 @@ return new class() extends Migration
                 continue;
             }
 
-            Schema::table($squareTable, function (Blueprint $table) use ($squareTable) {
+            Schema::table($squareTable, function(Blueprint $table) use ($squareTable) {
                 $table->string('square_id')->nullable()->index();
                 $table->string('square_version')->nullable()->index();
 
@@ -55,7 +55,7 @@ return new class() extends Migration
                 continue;
             }
 
-            Schema::table($squareTable, function (Blueprint $table) use ($squareTable) {
+            Schema::table($squareTable, function(Blueprint $table) use ($squareTable) {
                 $table->dropColumn([
                     'square_id',
                     'square_version',

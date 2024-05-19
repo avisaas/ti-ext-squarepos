@@ -22,7 +22,7 @@ class Extension extends BaseExtension
     {
         $this->registerConsoleCommand('square.sync', SyncCommand::class);
 
-        $this->app->bind(SquareClient::class, function ($app) {
+        $this->app->bind(SquareClient::class, function($app) {
             return new SquareClient(Settings::connectionData());
         });
 
@@ -63,23 +63,23 @@ class Extension extends BaseExtension
 
     protected function extendCoreModels(): void
     {
-        Category::extend(function ($model) {
+        Category::extend(function($model) {
             $model->implement[] = \IgniterLabs\SquarePOS\Actions\CategoryAction::class;
         });
 
-        Menu::extend(function ($model) {
+        Menu::extend(function($model) {
             $model->implement[] = \IgniterLabs\SquarePOS\Actions\MenuItemAction::class;
         });
 
-        MenuOption::extend(function ($model) {
+        MenuOption::extend(function($model) {
             $model->implement[] = \IgniterLabs\SquarePOS\Actions\MenuOptionAction::class;
         });
 
-        MenuOptionValue::extend(function ($model) {
+        MenuOptionValue::extend(function($model) {
             $model->implement[] = \IgniterLabs\SquarePOS\Actions\MenuOptionValueAction::class;
         });
 
-        Stock::extend(function ($model) {
+        Stock::extend(function($model) {
             $model->implement[] = \IgniterLabs\SquarePOS\Actions\StockAction::class;
         });
     }

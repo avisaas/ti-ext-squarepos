@@ -8,7 +8,7 @@ class PushStocks extends AbstractSyncPipe
 {
     public function execute()
     {
-        Stock::squareExportItems($this->syncTask, function ($stocks) {
+        Stock::squareExportItems($this->syncTask, function($stocks) {
             $this->syncTask->note('Exporting menu item stocks into square');
 
             $stocks = $this->removeCleanVersions($stocks);
@@ -23,7 +23,7 @@ class PushStocks extends AbstractSyncPipe
 
     protected function removeCleanVersions($stocks)
     {
-        return $stocks->filter(function ($stock) {
+        return $stocks->filter(function($stock) {
             $locations = $stock->stockable->getStockableLocations();
 
             return $locations->isNotEmpty()
@@ -34,7 +34,7 @@ class PushStocks extends AbstractSyncPipe
 
     protected function makeChangesBatch($stocks)
     {
-        return $stocks->map(function ($stock) {
+        return $stocks->map(function($stock) {
             return $stock->asSquareInventoryChange();
         })->values()->all();
     }

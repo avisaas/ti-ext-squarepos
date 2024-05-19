@@ -20,7 +20,7 @@ class PullItemOptions extends AbstractSyncPipe
 
         $response = $this->square->searchCatalogObjects($options, true);
 
-        MenuOption::squareImportItems($response->getObjects(), function (CatalogObject $catalogObject, $model) {
+        MenuOption::squareImportItems($response->getObjects(), function(CatalogObject $catalogObject, $model) {
             $this->syncTask->note('Importing menu options from square');
 
             if ($catalogObject->getIsDeleted()) {

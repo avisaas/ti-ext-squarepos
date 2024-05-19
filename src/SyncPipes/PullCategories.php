@@ -19,7 +19,7 @@ class PullCategories extends AbstractSyncPipe
 
         $nextBeingTime = now()->toISOString();
 
-        Category::squareImportItems($response->getObjects(), function ($catalogObject, $model) {
+        Category::squareImportItems($response->getObjects(), function($catalogObject, $model) {
             $this->syncTask->note('Importing categories from square');
 
             if ($catalogObject->getIsDeleted()) {

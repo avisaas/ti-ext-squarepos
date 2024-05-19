@@ -11,7 +11,7 @@ class PushCategories extends AbstractSyncPipe
 {
     public function execute()
     {
-        Category::squareExportItems($this->syncTask, function ($categories) {
+        Category::squareExportItems($this->syncTask, function($categories) {
             $this->syncTask->note('Exporting categories into square');
 
             $categories = $this->removeCleanVersions($categories);
@@ -34,7 +34,7 @@ class PushCategories extends AbstractSyncPipe
 
         $response = $this->square->batchRetrieveCatalogObjects($mappedIds);
 
-        return $categories->filter(function ($category) use ($response) {
+        return $categories->filter(function($category) use ($response) {
             if (is_null($category->square_id)) {
                 return true;
             }
@@ -55,7 +55,7 @@ class PushCategories extends AbstractSyncPipe
 
     protected function makeCatalogBatch(Collection $categories)
     {
-        $batch = $categories->map(function ($category) {
+        $batch = $categories->map(function($category) {
             return $category->asSquareCategory();
         })->values()->all();
 
@@ -64,7 +64,7 @@ class PushCategories extends AbstractSyncPipe
 
     protected function updateSquareAttributes(Collection $categories, CatalogResponse $response)
     {
-        $categories->each(function ($category) use ($response) {
+        $categories->each(function($category) use ($response) {
             if ($idMapping = $response->getMapping($category->getSquareId())) {
                 $category->square_id = $idMapping->getObjectId();
             }

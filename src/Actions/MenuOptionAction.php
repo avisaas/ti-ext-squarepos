@@ -26,9 +26,9 @@ class MenuOptionAction extends ModelAction
 
     public function squareImportItems(Collection $catalogObjects, callable $callback)
     {
-        $catalogObjects->filter(function (CatalogObject $catalogObject) {
+        $catalogObjects->filter(function(CatalogObject $catalogObject) {
             return strtoupper($catalogObject->getType()) === 'MODIFIER_LIST';
-        })->each(function (CatalogObject $catalogObject, $squareId) use ($callback) {
+        })->each(function(CatalogObject $catalogObject, $squareId) use ($callback) {
             $callback($catalogObject, $this->model);
         });
     }
@@ -59,7 +59,7 @@ class MenuOptionAction extends ModelAction
     public function createFromSquareModifierList(CatalogObject $catalogObject)
     {
         $optionValues = collect($catalogObject->getModifierListData()->getModifiers())
-            ->map(function (CatalogObject $modifierObject) {
+            ->map(function(CatalogObject $modifierObject) {
                 return [
                     'value' => $modifierObject->getModifierData()->getName(),
                     'price' => $modifierObject->getModifierData()->getPriceMoney()->getAmount() / 100,

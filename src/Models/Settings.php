@@ -37,7 +37,7 @@ class Settings extends Model
         try {
             $locations = resolve(SquareClient::class)
                 ->listLocations()
-                ->mapWithKeys(function (Location $location) {
+                ->mapWithKeys(function(Location $location) {
                     return [$location->getId() => $location->getName()];
                 })->all();
         } catch (ClientException $ex) {
