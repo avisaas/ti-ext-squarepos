@@ -54,11 +54,11 @@ class MenuItemAction extends ModelAction
 
     public function asSquareItem()
     {
-        $itemPrice = new Money();
+        $itemPrice = new Money;
         $itemPrice->setAmount(number_format($this->model->menu_price, 2, '.', '') * 100);
         $itemPrice->setCurrency(currency()->getUserCurrency());
 
-        $itemVariationData = new CatalogItemVariation();
+        $itemVariationData = new CatalogItemVariation;
         $itemVariationData->setItemId($this->getSquareId());
         $itemVariationData->setSku('ti_menu_item_'.$this->model->menu_id);
         $itemVariationData->setName($this->model->menu_name);
@@ -71,7 +71,7 @@ class MenuItemAction extends ModelAction
         $itemVariationObject->setVersion($this->model->square_variation_version);
         $this->squareApplyLocationIds($itemVariationObject);
 
-        $itemData = new CatalogItem();
+        $itemData = new CatalogItem;
         $itemData->setName($this->model->menu_name);
         $itemData->setDescription($this->model->menu_description);
         $itemData->setVariations([$itemVariationObject]);
@@ -112,7 +112,7 @@ class MenuItemAction extends ModelAction
                 return (bool)$stock->squareLocationRemoteId();
             })
             ->map(function($stock) {
-                $itemVariationOverrides = new ItemVariationLocationOverrides();
+                $itemVariationOverrides = new ItemVariationLocationOverrides;
                 $itemVariationOverrides->setTrackInventory((bool)$stock->is_tracked);
                 $itemVariationOverrides->setInventoryAlertType($stock->low_stock_alert ? 'LOW_QUANTITY' : 'NONE');
                 $itemVariationOverrides->setInventoryAlertThreshold($stock->low_stock_threshold);

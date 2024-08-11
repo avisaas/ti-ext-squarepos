@@ -96,9 +96,7 @@ class SyncTask extends Model
         ));
     }
 
-    public function noteDeleted($model, string $name)
-    {
-    }
+    public function noteDeleted($model, string $name) {}
 
     public function getConfigData($key, $default = null)
     {

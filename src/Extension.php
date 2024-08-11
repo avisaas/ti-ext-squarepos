@@ -29,9 +29,7 @@ class Extension extends BaseExtension
         $this->extendCoreModels();
     }
 
-    public function boot()
-    {
-    }
+    public function boot() {}
 
     public function registerPermissions(): array
     {

@@ -21,11 +21,11 @@ class MenuOptionValueAction extends ModelAction
 
     public function asSquareModifier()
     {
-        $modifierPrice = new Money();
+        $modifierPrice = new Money;
         $modifierPrice->setAmount(number_format($this->model->price, 2, '.', '') * 100);
         $modifierPrice->setCurrency(currency()->getUserCurrency());
 
-        $modifierData = new CatalogModifier();
+        $modifierData = new CatalogModifier;
         $modifierData->setName($this->model->value);
         $modifierData->setOrdinal($this->model->priority);
         $modifierData->setPriceMoney($modifierPrice);

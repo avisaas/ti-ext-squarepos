@@ -51,7 +51,7 @@ class SquareClient
 
     public function searchCatalogObjects(array $options, bool $related = false, bool $deleted = false)
     {
-        $body = new SearchCatalogObjectsRequest();
+        $body = new SearchCatalogObjectsRequest;
         $body->setIncludeRelatedObjects($related);
         $body->setIncludeDeletedObjects($deleted);
         $body->setObjectTypes($options['types'] ?? null);
@@ -108,7 +108,7 @@ class SquareClient
 
     public function batchDeleteCatalogObjects(array $ids)
     {
-        $body = new BatchDeleteCatalogObjectsRequest();
+        $body = new BatchDeleteCatalogObjectsRequest;
         $body->setObjectIds($ids);
 
         $response = $this->client->getCatalogApi()->batchDeleteCatalogObjects($body);

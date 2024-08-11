@@ -24,7 +24,5 @@ class SyncInventoryJob implements ShouldQueue
      */
     public $logsOutput;
 
-    public function handle()
-    {
-    }
+    public function handle() {}
 }

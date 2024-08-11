@@ -40,7 +40,7 @@ class MenuOptionAction extends ModelAction
 
     public function asSquareModifierList()
     {
-        $modifierListData = new CatalogModifierList();
+        $modifierListData = new CatalogModifierList;
         $modifierListData->setName($this->model->option_name);
         $modifierListData->setOrdinal($this->model->priority);
         $modifierListData->setSelectionType(

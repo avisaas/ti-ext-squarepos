@@ -6,7 +6,5 @@ use IgniterLabs\SquarePOS\Models\SyncTask;
 
 class PullStocks
 {
-    public function handle(SyncTask $syncTask)
-    {
-    }
+    public function handle(SyncTask $syncTask) {}
 }

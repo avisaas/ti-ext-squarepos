@@ -34,14 +34,14 @@ class StockAction extends ModelAction
 
     public function asSquareInventoryChange()
     {
-        $physicalCount = new InventoryPhysicalCount();
+        $physicalCount = new InventoryPhysicalCount;
         $physicalCount->setCatalogObjectId($this->model->stockable->square_variation_id);
         $physicalCount->setState('IN_STOCK');
         $physicalCount->setLocationId($this->squareLocationRemoteId());
         $physicalCount->setQuantity($this->model->quantity);
         $physicalCount->setOccurredAt(make_carbon($this->model->updated_at)->toISOString());
 
-        $inventoryChange = new InventoryChange();
+        $inventoryChange = new InventoryChange;
         $inventoryChange->setType('PHYSICAL_COUNT');
         $inventoryChange->setPhysicalCount($physicalCount);
 

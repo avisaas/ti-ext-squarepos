@@ -40,7 +40,7 @@ class CategoryAction extends ModelAction
 
     public function asSquareCategory()
     {
-        $categoryData = new CatalogCategory();
+        $categoryData = new CatalogCategory;
         $categoryData->setName($this->model->name);
 
         $categoryObject = new CatalogObject('CATEGORY', $this->getSquareId());
