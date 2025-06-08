@@ -12,7 +12,7 @@ return [
     'text_failed' => '<span class="text-danger">Failed</span>',
 
     'setting_title' => 'Square POS Settings',
-    'setting_desc' => 'Configure settings to determine how data sync between Square and TastyIgniter.',
+    'setting_desc' => 'Configure Square POS integration settings.',
 
     'button_connect' => 'Connect with Square',
     'button_disconnect' => 'Disconnect from Square',
