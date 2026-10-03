@@ -139,6 +139,8 @@ it('resolves the square sdk for sandbox and production', function(): void {
 
     Settings::set('environment', 'production');
     app()->forgetInstance(\Square\SquareClient::class);
+    app()->forgetInstance(SquareClient::class);
 
-    expect(resolve(\Square\SquareClient::class))->toBeInstanceOf(\Square\SquareClient::class);
+    expect(resolve(\Square\SquareClient::class))->toBeInstanceOf(\Square\SquareClient::class)
+        ->and(resolve(SquareClient::class))->toBeInstanceOf(SquareClient::class);
 });

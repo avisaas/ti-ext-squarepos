@@ -129,6 +129,12 @@ it('does nothing when there is no remote order to update', function(): void {
     $order = deliveryOrder($this->location, $this->menu, $this->completed);
     SquareOrder::forOwner($order)->forceFill(['square_order_id' => 'ORDER-1'])->save();
     SquareOrder::saveOwner($order);
+    $order->status_id = Status::factory()->create(['status_for' => 'order', 'status_name' => 'Received'])->getKey();
+    $order->save();
+    $order->pushSquareStatus();
+
+    $order->status_id = $this->completed->getKey();
+    $order->save();
     $this->square->shouldReceive('retrieveOrder')->andReturn(null);
 
     $order->pushSquareStatus();

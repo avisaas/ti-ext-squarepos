@@ -17,6 +17,7 @@ use IgniterLabs\SquarePOS\Classes\SyncContext;
 use IgniterLabs\SquarePOS\Exceptions\ClientException;
 use IgniterLabs\SquarePOS\Models\Settings;
 use IgniterLabs\SquarePOS\Models\SquareLink;
+use IgniterLabs\SquarePOS\Models\SquareOrder;
 use IgniterLabs\SquarePOS\Subscribers\MenuFormValidationSubscriber;
 use IgniterLabs\SquarePOS\Subscribers\SquareSubscriber;
 use IgniterLabs\SquarePOS\Tests\Support\Square;
@@ -162,6 +163,8 @@ it('pushes orders from checkout and status events', function(): void {
     Settings::set('order_completed_status', $completed->getKey());
     $order->status_id = $completed->getKey();
     $order->save();
+    SquareOrder::forOwner($order)->forceFill(['square_order_id' => 'ORDER-1'])->save();
+    SquareOrder::saveOwner($order);
 
     $throwing = Mockery::mock(SquareClient::class);
     $throwing->shouldReceive('retrieveOrder')->andThrow(new RuntimeException('status down'));
