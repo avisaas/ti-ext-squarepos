@@ -1,376 +1,931 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Access to an undefined property Igniter\\\\Flame\\\\Database\\\\Model\\:\\:\\$location\\.$#"
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SquareLink\:\:\$square_dirty\.$#'
+			identifier: property.notFound
 			count: 1
-			path: src/Actions/CategoryAction.php
+			path: src/BulkActionWidgets/SquareSync.php
 
 		-
-			message: "#^Access to an undefined property Igniter\\\\Flame\\\\Database\\\\Model\\:\\:\\$locations\\.$#"
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SquareLink\:\:\$square_sync\.$#'
+			identifier: property.notFound
 			count: 1
-			path: src/Actions/CategoryAction.php
+			path: src/BulkActionWidgets/SquareSync.php
 
 		-
-			message: "#^Access to an undefined property Igniter\\\\Flame\\\\Database\\\\Model\\:\\:\\$name\\.$#"
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SquareLink\:\:\$square_image_id\.$#'
+			identifier: property.notFound
 			count: 1
-			path: src/Actions/CategoryAction.php
+			path: src/Classes/CatalogImageUploader.php
 
 		-
-			message: "#^Access to an undefined property Igniter\\\\Flame\\\\Database\\\\Model\\:\\:\\$square_id\\.$#"
-			count: 1
-			path: src/Actions/CategoryAction.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Flame\\\\Database\\\\Model\\:\\:\\$square_version\\.$#"
-			count: 1
-			path: src/Actions/CategoryAction.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Flame\\\\Database\\\\Model\\:\\:locations\\(\\)\\.$#"
-			count: 1
-			path: src/Actions/CategoryAction.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Flame\\\\Database\\\\Model\\:\\:squareLocationRemoteIds\\(\\)\\.$#"
-			count: 1
-			path: src/Actions/CategoryAction.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Flame\\\\Database\\\\Model\\:\\:updateOrCreate\\(\\)\\.$#"
-			count: 1
-			path: src/Actions/CategoryAction.php
-
-		-
-			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<Igniter\\\\Flame\\\\Database\\\\Model\\>\\:\\:isEnabled\\(\\)\\.$#"
-			count: 1
-			path: src/Actions/CategoryAction.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Flame\\\\Database\\\\Model\\:\\:\\$categories\\.$#"
-			count: 1
-			path: src/Actions/MenuItemAction.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Flame\\\\Database\\\\Model\\:\\:\\$location\\.$#"
-			count: 1
-			path: src/Actions/MenuItemAction.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Flame\\\\Database\\\\Model\\:\\:\\$locations\\.$#"
-			count: 1
-			path: src/Actions/MenuItemAction.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Flame\\\\Database\\\\Model\\:\\:\\$menu_description\\.$#"
-			count: 1
-			path: src/Actions/MenuItemAction.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Flame\\\\Database\\\\Model\\:\\:\\$menu_id\\.$#"
-			count: 1
-			path: src/Actions/MenuItemAction.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Flame\\\\Database\\\\Model\\:\\:\\$menu_name\\.$#"
+			message: '#^Cannot access property \$menu_name on class\-string\|object\.$#'
+			identifier: property.nonObject
 			count: 2
-			path: src/Actions/MenuItemAction.php
+			path: src/Classes/CatalogImageUploader.php
 
 		-
-			message: "#^Access to an undefined property Igniter\\\\Flame\\\\Database\\\\Model\\:\\:\\$menu_price\\.$#"
+			message: '#^Cannot access property \$squareLink on class\-string\|object\.$#'
+			identifier: property.nonObject
+			count: 3
+			path: src/Classes/CatalogImageUploader.php
+
+		-
+			message: '#^Cannot call method getKey\(\) on class\-string\|object\.$#'
+			identifier: method.nonObject
 			count: 1
-			path: src/Actions/MenuItemAction.php
+			path: src/Classes/CatalogImageUploader.php
 
 		-
-			message: "#^Access to an undefined property Igniter\\\\Flame\\\\Database\\\\Model\\:\\:\\$square_id\\.$#"
-			count: 1
-			path: src/Actions/MenuItemAction.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Flame\\\\Database\\\\Model\\:\\:\\$square_variation_id\\.$#"
-			count: 1
-			path: src/Actions/MenuItemAction.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Flame\\\\Database\\\\Model\\:\\:\\$square_variation_version\\.$#"
-			count: 1
-			path: src/Actions/MenuItemAction.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Flame\\\\Database\\\\Model\\:\\:\\$square_version\\.$#"
-			count: 1
-			path: src/Actions/MenuItemAction.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Support\\\\Optional\\:\\:\\$square_id\\.$#"
-			count: 1
-			path: src/Actions/MenuItemAction.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Flame\\\\Database\\\\Model\\:\\:getAvailableStocks\\(\\)\\.$#"
-			count: 1
-			path: src/Actions/MenuItemAction.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Flame\\\\Database\\\\Model\\:\\:locations\\(\\)\\.$#"
-			count: 1
-			path: src/Actions/MenuItemAction.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Flame\\\\Database\\\\Model\\:\\:squareLocationRemoteIds\\(\\)\\.$#"
-			count: 1
-			path: src/Actions/MenuItemAction.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Flame\\\\Database\\\\Model\\:\\:updateOrCreate\\(\\)\\.$#"
-			count: 1
-			path: src/Actions/MenuItemAction.php
-
-		-
-			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<Igniter\\\\Flame\\\\Database\\\\Model\\>\\:\\:isEnabled\\(\\)\\.$#"
-			count: 1
-			path: src/Actions/MenuItemAction.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Flame\\\\Database\\\\Model\\:\\:\\$display_type\\.$#"
-			count: 1
-			path: src/Actions/MenuOptionAction.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Flame\\\\Database\\\\Model\\:\\:\\$location\\.$#"
-			count: 1
-			path: src/Actions/MenuOptionAction.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Flame\\\\Database\\\\Model\\:\\:\\$locations\\.$#"
-			count: 1
-			path: src/Actions/MenuOptionAction.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Flame\\\\Database\\\\Model\\:\\:\\$option_name\\.$#"
-			count: 1
-			path: src/Actions/MenuOptionAction.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Flame\\\\Database\\\\Model\\:\\:\\$priority\\.$#"
-			count: 1
-			path: src/Actions/MenuOptionAction.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Flame\\\\Database\\\\Model\\:\\:\\$square_id\\.$#"
-			count: 1
-			path: src/Actions/MenuOptionAction.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Flame\\\\Database\\\\Model\\:\\:\\$square_version\\.$#"
-			count: 1
-			path: src/Actions/MenuOptionAction.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Flame\\\\Database\\\\Model\\:\\:locations\\(\\)\\.$#"
-			count: 1
-			path: src/Actions/MenuOptionAction.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Flame\\\\Database\\\\Model\\:\\:squareLocationRemoteIds\\(\\)\\.$#"
-			count: 1
-			path: src/Actions/MenuOptionAction.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Flame\\\\Database\\\\Model\\:\\:updateOrCreate\\(\\)\\.$#"
-			count: 1
-			path: src/Actions/MenuOptionAction.php
-
-		-
-			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Query\\\\Builder\\:\\:whereHasOrDoesntHaveLocation\\(\\)\\.$#"
-			count: 1
-			path: src/Actions/MenuOptionAction.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Flame\\\\Database\\\\Model\\:\\:\\$location\\.$#"
-			count: 1
-			path: src/Actions/MenuOptionValueAction.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Flame\\\\Database\\\\Model\\:\\:\\$locations\\.$#"
-			count: 1
-			path: src/Actions/MenuOptionValueAction.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Flame\\\\Database\\\\Model\\:\\:\\$option\\.$#"
-			count: 2
-			path: src/Actions/MenuOptionValueAction.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Flame\\\\Database\\\\Model\\:\\:\\$price\\.$#"
-			count: 1
-			path: src/Actions/MenuOptionValueAction.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Flame\\\\Database\\\\Model\\:\\:\\$priority\\.$#"
-			count: 1
-			path: src/Actions/MenuOptionValueAction.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Flame\\\\Database\\\\Model\\:\\:\\$square_id\\.$#"
-			count: 1
-			path: src/Actions/MenuOptionValueAction.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Flame\\\\Database\\\\Model\\:\\:\\$square_version\\.$#"
-			count: 1
-			path: src/Actions/MenuOptionValueAction.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Flame\\\\Database\\\\Model\\:\\:\\$value\\.$#"
-			count: 1
-			path: src/Actions/MenuOptionValueAction.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Flame\\\\Database\\\\Model\\:\\:locations\\(\\)\\.$#"
-			count: 1
-			path: src/Actions/MenuOptionValueAction.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Flame\\\\Database\\\\Model\\:\\:squareLocationRemoteIds\\(\\)\\.$#"
-			count: 1
-			path: src/Actions/MenuOptionValueAction.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Flame\\\\Database\\\\Model\\:\\:\\$location\\.$#"
-			count: 1
-			path: src/Actions/StockAction.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Flame\\\\Database\\\\Model\\:\\:\\$locations\\.$#"
-			count: 1
-			path: src/Actions/StockAction.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Flame\\\\Database\\\\Model\\:\\:\\$quantity\\.$#"
-			count: 1
-			path: src/Actions/StockAction.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Flame\\\\Database\\\\Model\\:\\:\\$square_id\\.$#"
-			count: 1
-			path: src/Actions/StockAction.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Flame\\\\Database\\\\Model\\:\\:\\$stockable\\.$#"
-			count: 1
-			path: src/Actions/StockAction.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Flame\\\\Database\\\\Model\\:\\:\\$updated_at\\.$#"
-			count: 1
-			path: src/Actions/StockAction.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Flame\\\\Database\\\\Model\\:\\:locations\\(\\)\\.$#"
-			count: 1
-			path: src/Actions/StockAction.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Flame\\\\Database\\\\Model\\:\\:squareLocationRemoteIds\\(\\)\\.$#"
-			count: 1
-			path: src/Actions/StockAction.php
-
-		-
-			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\:\\:whereHasOrDoesntHaveLocation\\(\\)\\.$#"
-			count: 1
-			path: src/Actions/StockAction.php
-
-		-
-			message: "#^Call to an undefined method Illuminate\\\\Support\\\\Optional\\:\\:get\\(\\)\\.$#"
+			message: '#^Call to an undefined method Illuminate\\Support\\Optional\:\:get\(\)\.$#'
+			identifier: method.notFound
 			count: 2
 			path: src/Classes/CatalogResponse.php
 
 		-
-			message: "#^Call to an undefined static method IgniterLabs\\\\SquarePOS\\\\Models\\\\SyncTask\\:\\:firstOrCreate\\(\\)\\.$#"
+			message: '#^Call to an undefined static method IgniterLabs\\SquarePOS\\Models\\SyncTask\:\:firstOrCreate\(\)\.$#'
+			identifier: staticMethod.notFound
 			count: 1
 			path: src/Classes/Dispatcher.php
 
 		-
-			message: "#^Unsafe usage of new static\\(\\)\\.$#"
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
 			count: 1
 			path: src/Classes/Dispatcher.php
 
 		-
-			message: "#^Call to an undefined static method IgniterLabs\\\\SquarePOS\\\\Models\\\\Settings\\:\\:get\\(\\)\\.$#"
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SyncTask\:\:\$exception\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Commands/SyncCommand.php
+
+		-
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SyncTask\:\:\$notes\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Commands/SyncCommand.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Support\\Optional\:\:getName\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Jobs/PullCategoriesJob.php
+
+		-
+			message: '#^Call to an undefined static method Igniter\\Cart\\Models\\Category\:\:squareImportItems\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: src/Jobs/PullCategoriesJob.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Support\\Optional\:\:getName\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Jobs/PullItemOptionsJob.php
+
+		-
+			message: '#^Call to an undefined static method Igniter\\Cart\\Models\\MenuOption\:\:squareImportItems\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: src/Jobs/PullItemOptionsJob.php
+
+		-
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SquareLink\:\:\$square_sync\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Jobs/PullItemsJob.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Support\\Optional\:\:getName\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Jobs/PullItemsJob.php
+
+		-
+			message: '#^Call to an undefined static method Igniter\\Cart\\Models\\Menu\:\:squareImportItems\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: src/Jobs/PullItemsJob.php
+
+		-
+			message: '#^Call to an undefined static method Igniter\\Cart\\Models\\Order\:\:squarePullItems\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: src/Jobs/PullOrdersJob.php
+
+		-
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SquareStock\:\:\$square_synced_at\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Jobs/PullStocksJob.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Cart\\Models\\Menu\:\:\$squareLink\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Jobs/PullStocksJob.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Cart\\Models\\Stock\:\:\$squareStock\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Jobs/PullStocksJob.php
+
+		-
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SquareLink\:\:\$square_dirty\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Jobs/PushCategoriesJob.php
+
+		-
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SquareLink\:\:\$square_id\.$#'
+			identifier: property.notFound
+			count: 3
+			path: src/Jobs/PushCategoriesJob.php
+
+		-
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SquareLink\:\:\$square_version\.$#'
+			identifier: property.notFound
+			count: 4
+			path: src/Jobs/PushCategoriesJob.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Support\\Optional\:\:getName\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Jobs/PushCategoriesJob.php
+
+		-
+			message: '#^Call to an undefined static method Igniter\\Cart\\Models\\Category\:\:squareExportItems\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: src/Jobs/PushCategoriesJob.php
+
+		-
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SquareLink\:\:\$square_dirty\.$#'
+			identifier: property.notFound
+			count: 3
+			path: src/Jobs/PushItemOptionsJob.php
+
+		-
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SquareLink\:\:\$square_id\.$#'
+			identifier: property.notFound
+			count: 5
+			path: src/Jobs/PushItemOptionsJob.php
+
+		-
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SquareLink\:\:\$square_version\.$#'
+			identifier: property.notFound
+			count: 5
+			path: src/Jobs/PushItemOptionsJob.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Support\\Optional\:\:getName\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Jobs/PushItemOptionsJob.php
+
+		-
+			message: '#^Call to an undefined static method Igniter\\Cart\\Models\\MenuOption\:\:squareExportItems\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: src/Jobs/PushItemOptionsJob.php
+
+		-
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SquareLink\:\:\$square_dirty\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Jobs/PushItemsJob.php
+
+		-
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SquareLink\:\:\$square_id\.$#'
+			identifier: property.notFound
+			count: 3
+			path: src/Jobs/PushItemsJob.php
+
+		-
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SquareLink\:\:\$square_variation_id\.$#'
+			identifier: property.notFound
+			count: 3
+			path: src/Jobs/PushItemsJob.php
+
+		-
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SquareLink\:\:\$square_variation_version\.$#'
+			identifier: property.notFound
+			count: 4
+			path: src/Jobs/PushItemsJob.php
+
+		-
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SquareLink\:\:\$square_version\.$#'
+			identifier: property.notFound
+			count: 4
+			path: src/Jobs/PushItemsJob.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Support\\Optional\:\:getName\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Jobs/PushItemsJob.php
+
+		-
+			message: '#^Call to an undefined static method Igniter\\Cart\\Models\\Menu\:\:squareExportItems\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: src/Jobs/PushItemsJob.php
+
+		-
+			message: '#^Call to an undefined static method Igniter\\Cart\\Models\\Order\:\:squareExportItems\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: src/Jobs/PushOrdersJob.php
+
+		-
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SquareStock\:\:\$square_synced_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Jobs/PushStocksJob.php
+
+		-
+			message: '#^Call to an undefined static method Igniter\\Cart\\Models\\Stock\:\:squareExportItems\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: src/Jobs/PushStocksJob.php
+
+		-
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SquareLink\:\:\$square_dirty\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/CategoryAction.php
+
+		-
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SquareLink\:\:\$square_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/CategoryAction.php
+
+		-
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SquareLink\:\:\$square_version\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/CategoryAction.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$location\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/CategoryAction.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$locations\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/CategoryAction.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/CategoryAction.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$squareLink\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Models/Concerns/CategoryAction.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:locations\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Concerns/CategoryAction.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:squareLocationRemoteIds\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Concerns/CategoryAction.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Builder\<Igniter\\Flame\\Database\\Model\>\:\:isEnabled\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Concerns/CategoryAction.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Support\\Optional\:\:getName\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Concerns/CategoryAction.php
+
+		-
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SquareLink\:\:\$linkable\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/MenuItemAction.php
+
+		-
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SquareLink\:\:\$square_dirty\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/MenuItemAction.php
+
+		-
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SquareLink\:\:\$square_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/MenuItemAction.php
+
+		-
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SquareLink\:\:\$square_image_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/MenuItemAction.php
+
+		-
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SquareLink\:\:\$square_sku\.$#'
+			identifier: property.notFound
+			count: 3
+			path: src/Models/Concerns/MenuItemAction.php
+
+		-
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SquareLink\:\:\$square_sync\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/MenuItemAction.php
+
+		-
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SquareLink\:\:\$square_variation_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/MenuItemAction.php
+
+		-
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SquareLink\:\:\$square_variation_version\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/MenuItemAction.php
+
+		-
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SquareLink\:\:\$square_version\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/MenuItemAction.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$categories\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/MenuItemAction.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$location\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/MenuItemAction.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$locations\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/MenuItemAction.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$menu_description\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/MenuItemAction.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$menu_name\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Models/Concerns/MenuItemAction.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$menu_price\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/MenuItemAction.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$menu_status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/MenuItemAction.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$squareLink\.$#'
+			identifier: property.notFound
 			count: 6
+			path: src/Models/Concerns/MenuItemAction.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:categories\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Concerns/MenuItemAction.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:getAvailableStocks\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Concerns/MenuItemAction.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:locations\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Concerns/MenuItemAction.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:menu_options\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Models/Concerns/MenuItemAction.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:squareAttachLocation\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Concerns/MenuItemAction.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:squareLocationRemoteIds\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Concerns/MenuItemAction.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Builder\<Igniter\\Flame\\Database\\Model\>\:\:isEnabled\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Concerns/MenuItemAction.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Support\\Optional\:\:getAmount\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Concerns/MenuItemAction.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Support\\Optional\:\:getPriceMoney\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Concerns/MenuItemAction.php
+
+		-
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SquareLink\:\:\$square_dirty\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Models/Concerns/MenuOptionAction.php
+
+		-
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SquareLink\:\:\$square_id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Models/Concerns/MenuOptionAction.php
+
+		-
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SquareLink\:\:\$square_version\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Models/Concerns/MenuOptionAction.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$display_type\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/MenuOptionAction.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$location\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/MenuOptionAction.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$locations\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/MenuOptionAction.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$option_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/MenuOptionAction.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$priority\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/MenuOptionAction.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$squareLink\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Models/Concerns/MenuOptionAction.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:locations\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Concerns/MenuOptionAction.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:squareLocationRemoteIds\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Concerns/MenuOptionAction.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Query\\Builder\:\:whereHasOrDoesntHaveLocation\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Concerns/MenuOptionAction.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Support\\Optional\:\:getAmount\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Concerns/MenuOptionAction.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Support\\Optional\:\:getOrdinal\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Models/Concerns/MenuOptionAction.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Support\\Optional\:\:getPriceMoney\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Concerns/MenuOptionAction.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Support\\Optional\:\:getSelectionType\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Concerns/MenuOptionAction.php
+
+		-
+			message: '#^Variable \$modifiers on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.variable
+			count: 1
+			path: src/Models/Concerns/MenuOptionAction.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$location\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/MenuOptionValueAction.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$locations\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/MenuOptionValueAction.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$option\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Models/Concerns/MenuOptionValueAction.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$price\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/MenuOptionValueAction.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$priority\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/MenuOptionValueAction.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$squareLink\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Models/Concerns/MenuOptionValueAction.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$value\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/MenuOptionValueAction.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:locations\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Concerns/MenuOptionValueAction.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:squareLocationRemoteIds\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Concerns/MenuOptionValueAction.php
+
+		-
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SquareOrder\:\:\$square_fulfillment_uid\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Models/Concerns/OrderAction.php
+
+		-
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SquareOrder\:\:\$square_order_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/OrderAction.php
+
+		-
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SquareOrder\:\:\$square_order_version\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/OrderAction.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$address\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/OrderAction.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$comment\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Models/Concerns/OrderAction.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$customer_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/OrderAction.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$email\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/OrderAction.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$location_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/OrderAction.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$menus\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/OrderAction.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$order_datetime\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/OrderAction.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$order_time_is_asap\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/OrderAction.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$squareOrder\.$#'
+			identifier: property.notFound
+			count: 3
+			path: src/Models/Concerns/OrderAction.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$status_id\.$#'
+			identifier: property.notFound
+			count: 3
+			path: src/Models/Concerns/OrderAction.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$telephone\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/OrderAction.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Support\\Optional\:\:\$iso_code_2\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/OrderAction.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Support\\Optional\:\:\$option_value\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/OrderAction.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Support\\Optional\:\:\$squareLink\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Models/Concerns/OrderAction.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Support\\Optional\:\:\$square_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/OrderAction.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Support\\Optional\:\:\$square_variation_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/OrderAction.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:addStatusHistory\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Concerns/OrderAction.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:isDeliveryType\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Concerns/OrderAction.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Support\\Optional\:\:note\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Concerns/OrderAction.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Support\\Optional\:\:toRfc3339String\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Concerns/OrderAction.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$location\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/StockAction.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$locations\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/StockAction.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$quantity\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/StockAction.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$stockable\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/StockAction.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Support\\Optional\:\:\$squareLink\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/StockAction.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Support\\Optional\:\:\$square_variation_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Concerns/StockAction.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:locations\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Concerns/StockAction.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:squareLocationRemoteIds\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Concerns/StockAction.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Query\\Builder\:\:whereHasOrDoesntHaveLocation\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Concerns/StockAction.php
+
+		-
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\Settings\:\:\$connection_data\.$#'
+			identifier: property.notFound
+			count: 1
 			path: src/Models/Settings.php
 
 		-
-			message: "#^Call to an undefined static method IgniterLabs\\\\SquarePOS\\\\Models\\\\Settings\\:\\:set\\(\\)\\.$#"
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\Settings\:\:\$connection_status\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Models/Settings.php
+
+		-
+			message: '#^Call to an undefined method IgniterLabs\\SquarePOS\\Models\\Settings\:\:getSettingsValue\(\)\.$#'
+			identifier: method.notFound
 			count: 3
 			path: src/Models/Settings.php
 
 		-
-			message: "#^Access to an undefined property IgniterLabs\\\\SquarePOS\\\\Models\\\\SyncTask\\:\\:\\$config_data\\.$#"
+			message: '#^Call to an undefined static method IgniterLabs\\SquarePOS\\Models\\Settings\:\:get\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 18
+			path: src/Models/Settings.php
+
+		-
+			message: '#^Call to an undefined static method IgniterLabs\\SquarePOS\\Models\\Settings\:\:set\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 3
+			path: src/Models/Settings.php
+
+		-
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SquareLink\:\:\$linkable\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/SquareLink.php
+
+		-
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SquareLink\:\:\$square_dirty\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/SquareLink.php
+
+		-
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SquareLink\:\:\$square_sync\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/SquareLink.php
+
+		-
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SyncTask\:\:\$config_data\.$#'
+			identifier: property.notFound
 			count: 6
 			path: src/Models/SyncTask.php
 
 		-
-			message: "#^Access to an undefined property IgniterLabs\\\\SquarePOS\\\\Models\\\\SyncTask\\:\\:\\$created_at\\.$#"
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SyncTask\:\:\$created_at\.$#'
+			identifier: property.notFound
 			count: 1
 			path: src/Models/SyncTask.php
 
 		-
-			message: "#^Access to an undefined property IgniterLabs\\\\SquarePOS\\\\Models\\\\SyncTask\\:\\:\\$exception\\.$#"
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SyncTask\:\:\$exception\.$#'
+			identifier: property.notFound
+			count: 4
+			path: src/Models/SyncTask.php
+
+		-
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SyncTask\:\:\$notes\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/SyncTask.php
+
+		-
+			message: '#^Access to an undefined property IgniterLabs\\SquarePOS\\Models\\SyncTask\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 7
+			path: src/Models/SyncTask.php
+
+		-
+			message: '#^Call to an undefined static method IgniterLabs\\SquarePOS\\Models\\Settings\:\:get\(\)\.$#'
+			identifier: staticMethod.notFound
 			count: 2
 			path: src/Models/SyncTask.php
 
 		-
-			message: "#^Access to an undefined property IgniterLabs\\\\SquarePOS\\\\Models\\\\SyncTask\\:\\:\\$is_success\\.$#"
-			count: 2
-			path: src/Models/SyncTask.php
-
-		-
-			message: "#^Access to an undefined property IgniterLabs\\\\SquarePOS\\\\Models\\\\SyncTask\\:\\:\\$type\\.$#"
+			message: '#^Access to an undefined property Igniter\\Cart\\Models\\Menu\:\:\$squareLink\.$#'
+			identifier: property.notFound
 			count: 1
-			path: src/Models/SyncTask.php
+			path: src/Subscribers/SquareSubscriber.php
 
 		-
-			message: "#^Call to an undefined static method IgniterLabs\\\\SquarePOS\\\\Models\\\\SyncTask\\:\\:where\\(\\)\\.$#"
+			message: '#^Call to an undefined method Igniter\\Cart\\Models\\Menu\:\:squareLink\(\)\.$#'
+			identifier: method.notFound
 			count: 1
-			path: src/Models/SyncTask.php
+			path: src/Subscribers/SquareSubscriber.php
 
 		-
-			message: "#^Call to an undefined static method Igniter\\\\Cart\\\\Models\\\\Category\\:\\:squareImportItems\\(\\)\\.$#"
+			message: '#^Call to an undefined method Igniter\\Cart\\Models\\Order\:\:pushSquareOrder\(\)\.$#'
+			identifier: method.notFound
 			count: 1
-			path: src/SyncPipes/PullCategories.php
+			path: src/Subscribers/SquareSubscriber.php
 
 		-
-			message: "#^Call to an undefined static method Igniter\\\\Cart\\\\Models\\\\MenuOption\\:\\:squareImportItems\\(\\)\\.$#"
+			message: '#^Call to an undefined method Igniter\\Cart\\Models\\Order\:\:pushSquareStatus\(\)\.$#'
+			identifier: method.notFound
 			count: 1
-			path: src/SyncPipes/PullItemOptions.php
-
-		-
-			message: "#^Call to an undefined static method Igniter\\\\Cart\\\\Models\\\\Menu\\:\\:squareImportItems\\(\\)\\.$#"
-			count: 1
-			path: src/SyncPipes/PullItems.php
-
-		-
-			message: "#^Call to an undefined static method Igniter\\\\Cart\\\\Models\\\\Category\\:\\:squareExportItems\\(\\)\\.$#"
-			count: 1
-			path: src/SyncPipes/PushCategories.php
-
-		-
-			message: "#^Call to an undefined static method Igniter\\\\Cart\\\\Models\\\\MenuOption\\:\\:squareExportItems\\(\\)\\.$#"
-			count: 1
-			path: src/SyncPipes/PushItemOptions.php
-
-		-
-			message: "#^Call to an undefined method Illuminate\\\\Support\\\\Optional\\:\\:getVariations\\(\\)\\.$#"
-			count: 2
-			path: src/SyncPipes/PushItems.php
-
-		-
-			message: "#^Call to an undefined static method Igniter\\\\Cart\\\\Models\\\\Menu\\:\\:squareExportItems\\(\\)\\.$#"
-			count: 1
-			path: src/SyncPipes/PushItems.php
-
-		-
-			message: "#^Call to an undefined static method Igniter\\\\Cart\\\\Models\\\\Stock\\:\\:squareExportItems\\(\\)\\.$#"
-			count: 1
-			path: src/SyncPipes/PushStocks.php
+			path: src/Subscribers/SquareSubscriber.php

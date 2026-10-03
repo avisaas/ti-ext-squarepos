@@ -6,27 +6,29 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up()
+    public function up(): void
     {
-        if (Schema::hasTable('igniterlabs_squarepos_tasks')) {
+        if (Schema::hasTable('squarepos_tasks')) {
             return;
         }
 
-        Schema::create('igniterlabs_squarepos_tasks', function(Blueprint $table) {
+        Schema::create('squarepos_tasks', function(Blueprint $table): void {
             $table->bigIncrements('id');
             $table->string('uuid');
-            $table->string('type');
+            $table->string('description')->nullable();
             $table->text('config_data')->nullable();
             $table->text('notes')->nullable();
             $table->text('exception')->nullable();
-            $table->boolean('is_success')->default(0);
+            $table->string('status')->default('queued');
+            $table->timestamp('started_at')->nullable();
+            $table->timestamp('finished_at')->nullable();
 
             $table->timestamps();
         });
     }
 
-    public function down()
+    public function down(): void
     {
-        Schema::dropIfExists('igniterlabs_squarepos_tasks');
+        Schema::dropIfExists('squarepos_tasks');
     }
 };

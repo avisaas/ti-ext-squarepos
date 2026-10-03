@@ -1,7 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace IgniterLabs\SquarePOS\Classes;
 
+use IgniterLabs\SquarePOS\Jobs\SyncInventoryJob;
+use IgniterLabs\SquarePOS\Jobs\SyncOrdersJob;
 use IgniterLabs\SquarePOS\Models\Settings;
 use IgniterLabs\SquarePOS\Models\SyncTask;
 use Illuminate\Support\Str;
@@ -10,48 +14,33 @@ class Dispatcher
 {
     public $uuid;
 
-    public $job;
-
     public $systemOfRecord;
 
     public $batchSize;
 
-    public $beginTimes;
-
     public $syncInventory;
 
-    /**
-     * The output interface implementation.
-     *
-     * @var \Illuminate\Console\OutputStyle
-     */
-    protected $logsOutput;
+    public $mode = 'sync';
 
     /**
-     * @var \IgniterLabs\SquarePOS\Models\SyncTask
+     * @var SyncTask|null
      */
     protected $syncTask;
 
-    public function __construct($job)
-    {
-        $this->job = app($job);
-    }
+    public function __construct(protected $jobClass) {}
 
-    public static function create($job)
+    public static function create($job): static
     {
         return (new static($job))
-            ->uuid(Str::uuid())
+            ->uuid((string)Str::uuid())
             ->systemOfRecord(Settings::getSystemOfRecord())
             ->batchSize(Settings::batchSize())
-            ->beginTimes(Settings::getSearchBeginTimes())
             ->syncInventory(Settings::isSyncEnabled());
     }
 
     public function uuid(string $uuid): self
     {
         $this->uuid = $uuid;
-
-        $this->job->uuid = $uuid;
 
         return $this;
     }
@@ -70,39 +59,53 @@ class Dispatcher
         return $this;
     }
 
-    public function beginTimes(array $beginTimes): self
-    {
-        $this->beginTimes = $beginTimes;
-
-        return $this;
-    }
-
-    public function setLogsOutput($output): self
-    {
-        $this->job->logsOutput = $output;
-
-        return $this;
-    }
-
-    public function syncInventory(bool $syncInventory)
+    public function syncInventory(bool $syncInventory): static
     {
         $this->syncInventory = $syncInventory;
 
         return $this;
     }
 
-    public function dispatch()
+    public function mode(string $mode): self
     {
-        $this->prepareSyncTask();
+        $this->mode = $mode;
 
-        dispatch($this->job);
+        return $this;
     }
 
-    public function dispatchSync()
+    public function import(): self
+    {
+        return $this->mode('import')->systemOfRecord(Settings::SQUARE_SOR);
+    }
+
+    public function export(): self
+    {
+        return $this->mode('export')->systemOfRecord(Settings::IGNITER_SOR);
+    }
+
+    public function dispatch(): void
     {
         $this->prepareSyncTask();
 
-        dispatch_sync($this->job);
+        dispatch(new $this->jobClass($this->syncTask));
+    }
+
+    public function dispatchSync(): SyncTask
+    {
+        $this->prepareSyncTask();
+
+        try {
+            dispatch_sync(new $this->jobClass($this->syncTask));
+        } finally {
+            $this->syncTask->refresh();
+        }
+
+        return $this->syncTask;
+    }
+
+    public function getSyncTask(): ?SyncTask
+    {
+        return $this->syncTask;
     }
 
     protected function prepareSyncTask()
@@ -111,14 +114,38 @@ class Dispatcher
             'uuid' => $this->uuid,
         ]);
 
-        $this->syncTask->type = $this->systemOfRecord;
+        $this->syncTask->status = SyncTask::STATUS_QUEUED;
+        $this->syncTask->description = $this->description();
 
         $this->syncTask->config_data = [
-            'beginTimes' => $this->beginTimes,
             'batchSize' => $this->batchSize,
             'syncInventory' => $this->syncInventory,
+            'mode' => $this->mode,
+            'createMissing' => $this->mode === 'import',
+            'systemOfRecord' => $this->systemOfRecord,
         ];
 
         $this->syncTask->save();
+    }
+
+    protected function description(): string
+    {
+        $key = match ($this->jobClass) {
+            SyncOrdersJob::class => 'igniterlabs.squarepos::default.text_pushing_orders',
+            SyncInventoryJob::class => $this->systemOfRecord === Settings::SQUARE_SOR
+                ? 'igniterlabs.squarepos::default.text_pulling_inventory'
+                : 'igniterlabs.squarepos::default.text_pushing_inventory',
+            default => $this->pushesCatalog()
+                ? 'igniterlabs.squarepos::default.text_pushing_catalog'
+                : 'igniterlabs.squarepos::default.text_pulling_catalog',
+        };
+
+        return lang($key);
+    }
+
+    protected function pushesCatalog(): bool
+    {
+        return $this->mode === 'export'
+            || ($this->mode !== 'import' && $this->systemOfRecord !== Settings::SQUARE_SOR);
     }
 }

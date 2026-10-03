@@ -1,36 +1,40 @@
 <?php
 
+declare(strict_types=1);
+
 namespace IgniterLabs\SquarePOS\Classes;
+
+use Square\Types\CatalogIdMapping;
+use Square\Types\CatalogObject;
 
 class CatalogResponse
 {
-    protected $response;
-
     protected $idMappings;
 
     protected $catalogObjects;
 
-    public function __construct($response)
+    public function __construct(protected $response)
     {
-        $this->response = $response;
-
-        if (method_exists($response, 'getIdMappings')) {
-            $this->idMappings = collect($response->getIdMappings() ?? [])
-                ->keyBy(function($idMapping) {
-                    return $idMapping->getClientObjectId();
-                });
+        if (method_exists($this->response, 'getIdMappings')) {
+            $this->idMappings = collect($this->response->getIdMappings() ?? [])
+                ->keyBy(fn($idMapping) => $idMapping->getClientObjectId());
         }
 
-        if (method_exists($response, 'getObjects')) {
-            $this->catalogObjects = collect($response->getObjects() ?? [])
-                ->keyBy(function($catalogObject) {
-                    return $catalogObject->getId();
-                });
+        if (method_exists($this->response, 'getObjects')) {
+            $this->catalogObjects = collect($this->response->getObjects() ?? [])
+                ->keyBy(fn(object $catalogObject) => CatalogRecord::unwrap($catalogObject)->getId());
+        }
+
+        if (method_exists($this->response, 'getRelatedObjects')) {
+            foreach ($this->response->getRelatedObjects() ?? [] as $catalogObject) {
+                $this->catalogObjects ??= collect();
+                $this->catalogObjects->put(CatalogRecord::unwrap($catalogObject)->getId(), $catalogObject);
+            }
         }
     }
 
     /**
-     * @return null|\Square\Models\CatalogIdMapping
+     * @return null|CatalogIdMapping
      */
     public function getMapping($clientId)
     {
@@ -38,7 +42,7 @@ class CatalogResponse
     }
 
     /**
-     * @return null|\Square\Models\CatalogObject
+     * @return null|CatalogObject
      */
     public function getObject($id)
     {

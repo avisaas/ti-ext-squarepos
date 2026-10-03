@@ -1,141 +1,226 @@
 <?php
 
+declare(strict_types=1);
+
 namespace IgniterLabs\SquarePOS\Classes;
 
 use IgniterLabs\SquarePOS\Exceptions\ClientException;
 use Illuminate\Support\Str;
-use Square\Environment;
-use Square\Models\BatchChangeInventoryRequest;
-use Square\Models\BatchDeleteCatalogObjectsRequest;
-use Square\Models\BatchRetrieveCatalogObjectsRequest;
-use Square\Models\BatchUpsertCatalogObjectsRequest;
-use Square\Models\Location;
-use Square\Models\SearchCatalogObjectsRequest;
+use Square\Catalog\Images\Requests\CreateImagesRequest;
+use Square\Catalog\Requests\BatchDeleteCatalogObjectsRequest;
+use Square\Catalog\Requests\BatchGetCatalogObjectsRequest;
+use Square\Catalog\Requests\BatchUpsertCatalogObjectsRequest;
+use Square\Catalog\Requests\ListCatalogRequest;
+use Square\Catalog\Requests\SearchCatalogObjectsRequest;
+use Square\Exceptions\SquareApiException;
+use Square\Exceptions\SquareException;
+use Square\OAuth\Requests\ObtainTokenRequest;
+use Square\Orders\Requests\BatchGetOrdersRequest;
+use Square\Orders\Requests\GetOrdersRequest;
+use Square\Orders\Requests\UpdateOrderRequest;
+use Square\Types\BatchChangeInventoryRequest;
+use Square\Types\BatchChangeInventoryResponse;
+use Square\Types\BatchDeleteCatalogObjectsResponse;
+use Square\Types\BatchGetCatalogObjectsResponse;
+use Square\Types\BatchGetInventoryCountsRequest;
+use Square\Types\BatchGetInventoryCountsResponse;
+use Square\Types\BatchUpsertCatalogObjectsResponse;
+use Square\Types\CatalogObject;
+use Square\Types\CreateCatalogImageRequest;
+use Square\Types\CreateOrderRequest;
+use Square\Types\ListCatalogResponse;
+use Square\Types\ListLocationsResponse;
+use Square\Types\Location;
+use Square\Types\ObtainTokenResponse;
+use Square\Types\Order;
+use Square\Types\SearchCatalogObjectsResponse;
+use Square\Utils\File;
 
 class SquareClient
 {
-    protected $config;
-
-    protected $client;
-
-    public function __construct($config)
-    {
-        $this->config = $config;
-
-        $this->client = new \Square\SquareClient([
-            'accessToken' => array_get($this->config, 'access_token'),
-            'environment' => array_get($this->config, 'environment', Environment::PRODUCTION),
-        ]);
-    }
+    protected $sdk;
 
     public function listLocations()
     {
-        $response = $this->client->getLocationsApi()->listLocations();
+        $response = $this->call(fn(): ListLocationsResponse => $this->sdk()->locations->list());
 
-        if (!$response->isSuccess()) {
-            throw new ClientException($response);
-        }
-
-        $result = $response->getResult()->getLocations();
-
-        return collect($result)
-            ->filter(function(Location $location) {
-                return $location->getStatus() === 'ACTIVE'
-                    && in_array('CREDIT_CARD_PROCESSING', (array)$location->getCapabilities(), true);
-            })->values();
+        return collect($response->getLocations() ?? [])
+            ->filter(fn(Location $location): bool => $location->getStatus() === 'ACTIVE')
+            ->values();
     }
 
-    //
-    //
-    //
-
-    public function searchCatalogObjects(array $options, bool $related = false, bool $deleted = false)
+    public static function resolveObjectTypes(array $options): ?array
     {
-        $body = new SearchCatalogObjectsRequest;
-        $body->setIncludeRelatedObjects($related);
-        $body->setIncludeDeletedObjects($deleted);
-        $body->setObjectTypes($options['types'] ?? null);
-        $body->setCursor($options['cursor'] ?? null);
-        $body->setLimit($options['limit'] ?? null);
-        $body->setBeginTime($options['beginTime'] ?? null);
-
-        $response = $this->client->getCatalogApi()->searchCatalogObjects($body);
-
-        if (!$response->isSuccess()) {
-            throw new ClientException($response);
+        $types = $options['object_types'] ?? $options['types'] ?? null;
+        if ($types === null || $types === []) {
+            return null;
         }
 
-        return new CatalogResponse($response->getResult());
+        return array_values((array)$types);
     }
 
-    public function listCatalogObjects(string $types, ?string $cursor = null)
+    public function searchCatalogObjects(array $options, bool $related = false, bool $deleted = false): CatalogResponse
     {
-        $response = $this->client->getCatalogApi()->listCatalog($cursor, $types);
+        $request = new SearchCatalogObjectsRequest([
+            'includeRelatedObjects' => $related,
+            'includeDeletedObjects' => $deleted,
+            'objectTypes' => self::resolveObjectTypes($options),
+            'cursor' => $options['cursor'] ?? null,
+            'limit' => $options['limit'] ?? null,
+            'beginTime' => $options['beginTime'] ?? null,
+        ]);
 
-        if (!$response->isSuccess()) {
-            throw new ClientException($response);
-        }
-
-        return new CatalogResponse($response->getResult());
+        return new CatalogResponse($this->call(fn(): SearchCatalogObjectsResponse => $this->sdk()->catalog->search($request)));
     }
 
-    public function batchRetrieveCatalogObjects(array $ids, bool $include = false)
+    public function listCatalogObjects(string $types, ?string $cursor = null): CatalogResponse
     {
-        $body = new BatchRetrieveCatalogObjectsRequest($ids);
-        $body->setIncludeRelatedObjects($include);
+        $request = new ListCatalogRequest([
+            'cursor' => $cursor,
+            'types' => $types,
+        ]);
 
-        $response = $this->client->getCatalogApi()->batchRetrieveCatalogObjects($body);
+        $objects = $this->call(function() use ($request): array {
+            $objects = [];
+            foreach ($this->sdk()->catalog->list($request)->getPages() as $page) {
+                foreach ($page->getItems() as $object) {
+                    $objects[] = $object;
+                }
 
-        if (!$response->isSuccess()) {
-            throw new ClientException($response);
-        }
+                break;
+            }
 
-        return new CatalogResponse($response->getResult());
+            return $objects;
+        });
+
+        return new CatalogResponse(new ListCatalogResponse([
+            'objects' => $objects,
+        ]));
     }
 
-    public function batchUpsertCatalogObjects(array $batches)
+    public function batchRetrieveCatalogObjects(array $ids, bool $include = false): CatalogResponse
     {
-        $body = new BatchUpsertCatalogObjectsRequest(Str::uuid(), $batches);
+        $request = new BatchGetCatalogObjectsRequest([
+            'objectIds' => array_values($ids),
+            'includeRelatedObjects' => $include,
+        ]);
 
-        $response = $this->client->getCatalogApi()->batchUpsertCatalogObjects($body);
-
-        if (!$response->isSuccess()) {
-            throw new ClientException($response);
-        }
-
-        return new CatalogResponse($response->getResult());
+        return new CatalogResponse($this->call(fn(): BatchGetCatalogObjectsResponse => $this->sdk()->catalog->batchGet($request)));
     }
 
-    public function batchDeleteCatalogObjects(array $ids)
+    public function batchUpsertCatalogObjects(array $batches): CatalogResponse
     {
-        $body = new BatchDeleteCatalogObjectsRequest;
-        $body->setObjectIds($ids);
+        $request = new BatchUpsertCatalogObjectsRequest([
+            'idempotencyKey' => (string)Str::uuid(),
+            'batches' => $batches,
+        ]);
 
-        $response = $this->client->getCatalogApi()->batchDeleteCatalogObjects($body);
-
-        if (!$response->isSuccess()) {
-            throw new ClientException($response);
-        }
-
-        return new CatalogResponse($response->getResult());
+        return new CatalogResponse($this->call(fn(): BatchUpsertCatalogObjectsResponse => $this->sdk()->catalog->batchUpsert($request)));
     }
 
-    //
-    //
-    //
+    public function batchDeleteCatalogObjects(array $ids): CatalogResponse
+    {
+        $request = new BatchDeleteCatalogObjectsRequest([
+            'objectIds' => array_values($ids),
+        ]);
+
+        return new CatalogResponse($this->call(fn(): BatchDeleteCatalogObjectsResponse => $this->sdk()->catalog->batchDelete($request)));
+    }
 
     public function batchChangeInventory(array $changes, bool $ignoreUnchanged = true)
     {
-        $body = new BatchChangeInventoryRequest(Str::uuid());
-        $body->setChanges($changes);
-        $body->setIgnoreUnchangedCounts(true);
+        $request = new BatchChangeInventoryRequest([
+            'idempotencyKey' => (string)Str::uuid(),
+            'changes' => $changes,
+            'ignoreUnchangedCounts' => $ignoreUnchanged,
+        ]);
 
-        $response = $this->client->getInventoryApi()->batchChangeInventory($body);
+        return $this->call(fn(): BatchChangeInventoryResponse => $this->sdk()->inventory->batchCreateChanges($request));
+    }
 
-        if (!$response->isSuccess()) {
-            throw new ClientException($response);
+    public function batchRetrieveInventoryCounts(array $catalogObjectIds, array $locationIds, ?string $cursor = null)
+    {
+        $request = new BatchGetInventoryCountsRequest([
+            'catalogObjectIds' => array_values($catalogObjectIds),
+            'locationIds' => array_values($locationIds),
+            'cursor' => $cursor,
+        ]);
+
+        return $this->call(function() use ($request): BatchGetInventoryCountsResponse {
+            $counts = [];
+            foreach ($this->sdk()->inventory->batchGetCounts($request)->getPages() as $page) {
+                foreach ($page->getItems() as $count) {
+                    $counts[] = $count;
+                }
+            }
+
+            return new BatchGetInventoryCountsResponse([
+                'counts' => $counts,
+            ]);
+        });
+    }
+
+    public function createCatalogImage(string $idempotencyKey, $imageObject, string $filePath, ?string $attachToId = null, ?string $mimeType = null)
+    {
+        $request = new CreateCatalogImageRequest([
+            'idempotencyKey' => $idempotencyKey,
+            'image' => $imageObject,
+            'objectId' => $attachToId,
+        ]);
+
+        return $this->call(fn(): ?CatalogObject => $this->sdk()->catalog->images->create(new CreateImagesRequest([
+            'request' => $request,
+            'imageFile' => File::createFromFilepath($filePath, basename($filePath), $mimeType ?: 'image/jpeg'),
+        ]))->getImage());
+    }
+
+    public function createOrder(CreateOrderRequest $request)
+    {
+        return $this->call(fn(): ?Order => $this->sdk()->orders->create($request)->getOrder());
+    }
+
+    public function updateOrder(UpdateOrderRequest $request)
+    {
+        return $this->call(fn(): ?Order => $this->sdk()->orders->update($request)->getOrder());
+    }
+
+    public function retrieveOrder(string $orderId)
+    {
+        return $this->call(fn(): ?Order => $this->sdk()->orders->get(new GetOrdersRequest([
+            'orderId' => $orderId,
+        ]))->getOrder());
+    }
+
+    public function batchRetrieveOrders(array $orderIds)
+    {
+        return $this->call(fn(): array => $this->sdk()->orders->batchGet(new BatchGetOrdersRequest([
+            'orderIds' => array_values($orderIds),
+        ]))->getOrders() ?? []);
+    }
+
+    public function refreshAccessToken(string $clientId, string $clientSecret, string $refreshToken)
+    {
+        return $this->call(fn(): ObtainTokenResponse => $this->sdk()->oAuth->obtainToken(new ObtainTokenRequest([
+            'clientId' => $clientId,
+            'clientSecret' => $clientSecret,
+            'grantType' => 'refresh_token',
+            'refreshToken' => $refreshToken,
+        ])));
+    }
+
+    protected function sdk(): \Square\SquareClient
+    {
+        return $this->sdk ??= resolve(\Square\SquareClient::class);
+    }
+
+    protected function call(callable $callback)
+    {
+        try {
+            return $callback();
+        } catch (SquareApiException $exception) {
+            throw new ClientException($exception, $exception->getCode(), $exception);
+        } catch (SquareException $exception) {
+            throw new ClientException($exception->getMessage(), (int)$exception->getCode(), $exception);
         }
-
-        return $response->getResult();
     }
 }

@@ -1,16 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace IgniterLabs\SquarePOS\Jobs;
 
-use Exception;
-use IgniterLabs\SquarePOS\Exceptions\SyncException;
 use IgniterLabs\SquarePOS\Models\SyncTask;
-use IgniterLabs\SquarePOS\SyncPipes;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Bus;
 use Throwable;
 
 class SyncCatalogJob implements ShouldQueue
@@ -20,56 +20,44 @@ class SyncCatalogJob implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
-    public $uuid = '';
+    public function __construct(protected SyncTask $syncTask) {}
 
-    /**
-     * The output interface implementation.
-     *
-     * @var \Illuminate\Console\OutputStyle
-     */
-    public $logsOutput;
-
-    public function handle()
+    public function handle(): void
     {
-        if (!$this->uuid) {
-            throw new SyncException('Missing sync task identifier');
-        }
-
-        $syncTask = SyncTask::findBy($this->uuid);
-
-        $syncTask->setSyncJob($this);
+        $this->syncTask->markAsRunning();
 
         try {
-            $this->getSyncPipes($syncTask)->each(function(string $syncPipe) use ($syncTask) {
-                (new $syncPipe($syncTask))->execute();
-
-                $syncTask->save();
-            });
-
-            $syncTask->markAsComplete();
-        } catch (Throwable|Exception $ex) {
-            $syncTask->saveException($ex);
-
-            throw $ex;
+            Bus::chain($this->syncJobs())->dispatch();
+        } catch (Throwable) {
+            // The failed step already stored the exception and sent the summary.
         }
     }
 
-    protected function getSyncPipes($syncTask)
+    protected function syncJobs(): array
     {
-        $pipes[] = SyncPipes\StartSync::class;
+        $jobs = [];
 
-        if ($syncTask->isSystemOfRecordSquare()) {
-            $pipes[] = SyncPipes\PullCategories::class;
-            $pipes[] = SyncPipes\PullItemOptions::class;
-            $pipes[] = SyncPipes\PullItems::class;
+        $push = $this->syncTask->getConfigData('mode') === 'export'
+            || ($this->syncTask->getConfigData('mode') !== 'import'
+                && !$this->syncTask->isSystemOfRecordSquare());
+
+        if ($push) {
+            $jobs[] = new PushCategoriesJob($this->syncTask);
+            $jobs[] = new PushItemOptionsJob($this->syncTask);
+            $jobs[] = new PushItemsJob($this->syncTask);
         } else {
-            $pipes[] = SyncPipes\PushCategories::class;
-            $pipes[] = SyncPipes\PushItemOptions::class;
-            $pipes[] = SyncPipes\PushItems::class;
+            $jobs[] = new PullCategoriesJob($this->syncTask);
+            $jobs[] = new PullItemOptionsJob($this->syncTask);
+            $jobs[] = new PullItemsJob($this->syncTask);
         }
 
-        $pipes[] = SyncPipes\CompleteSync::class;
+        if ($this->syncTask->getConfigData('syncInventory')) {
+            $jobs[] = new PullStocksJob($this->syncTask);
+            $jobs[] = new PushStocksJob($this->syncTask);
+        }
 
-        return collect($pipes);
+        $jobs[] = new CompleteSyncJob($this->syncTask->getKey());
+
+        return $jobs;
     }
 }

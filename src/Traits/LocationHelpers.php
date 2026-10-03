@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace IgniterLabs\SquarePOS\Traits;
 
+use IgniterLabs\SquarePOS\Classes\CatalogRecord;
 use IgniterLabs\SquarePOS\Models\Settings;
-use Square\Models\CatalogObject;
 
 trait LocationHelpers
 {
@@ -20,7 +22,7 @@ trait LocationHelpers
         return array_get($mapping, 'remote_id');
     }
 
-    public function squareLocationRemoteIds()
+    public function squareLocationRemoteIds(): array
     {
         $locationIds = [];
         if (!$this->model->locations || $this->model->locations->isEmpty()) {
@@ -37,25 +39,28 @@ trait LocationHelpers
         return $locationIds;
     }
 
-    public function squareApplyLocationIds(CatalogObject $catalogObject)
+    public function squareApplyLocationIds(object $catalogObject): void
     {
         $locationIds = $this->model->squareLocationRemoteIds();
-
-        $catalogObject->setPresentAtAllLocations(!$locationIds);
-        $catalogObject->setPresentAtLocationIds($locationIds);
+        $record = CatalogRecord::unwrap($catalogObject);
+        $record->setPresentAtAllLocations($locationIds === []);
+        $record->setPresentAtLocationIds($locationIds);
     }
 
-    public function squareAttachLocation(CatalogObject $catalogObject)
+    public function squareAttachLocation(object $catalogObject): ?bool
     {
-        if ($catalogObject->getPresentAtAllLocations()) {
+        $record = CatalogRecord::unwrap($catalogObject);
+        if ($record->getPresentAtAllLocations()) {
             return true;
         }
 
         $attachLocationIds = Settings::locationMapping()
-            ->whereIn('remote_id', (array)$catalogObject->getPresentAtLocationIds())
+            ->whereIn('remote_id', (array)$record->getPresentAtLocationIds())
             ->pluck('client_id')
             ->all();
 
         $this->model->locations()->sync($attachLocationIds);
+
+        return null;
     }
 }

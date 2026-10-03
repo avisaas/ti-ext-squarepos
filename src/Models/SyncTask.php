@@ -1,49 +1,68 @@
 <?php
 
+declare(strict_types=1);
+
 namespace IgniterLabs\SquarePOS\Models;
 
 use Igniter\Flame\Database\Model;
-use IgniterLabs\SquarePOS\Exceptions\SyncException;
+use Igniter\System\Models\Concerns\SendsMailTemplate;
+use IgniterLabs\SquarePOS\Classes\CatalogRecord;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Prunable;
+use Illuminate\Support\Carbon;
 use Throwable;
 
+/**
+ * @property string|null $description
+ * @property Carbon|null $started_at
+ * @property Carbon|null $finished_at
+ */
 class SyncTask extends Model
 {
-    public $table = 'igniterlabs_squarepos_tasks';
+    use Prunable;
+    use SendsMailTemplate;
+
+    public const STATUS_QUEUED = 'queued';
+
+    public const STATUS_RUNNING = 'running';
+
+    public const STATUS_SUCCESS = 'success';
+
+    public const STATUS_FAILURE = 'failure';
+
+    public $table = 'squarepos_tasks';
 
     public $guarded = [];
 
     public $timestamps = true;
 
+    protected $attributes = [
+        'status' => self::STATUS_QUEUED,
+    ];
+
     protected $casts = [
         'config_data' => 'array',
         'notes' => 'array',
         'exception' => 'array',
-        'is_success' => 'boolean',
+        'started_at' => 'datetime',
+        'finished_at' => 'datetime',
     ];
 
     protected $appends = ['status_name', 'created_since'];
 
-    protected $syncJob;
-
-    public static function findBy(string $uuid)
+    public function getStatusNameAttribute($value): string
     {
-        if (!$model = self::where('uuid', $uuid)->first()) {
-            throw new SyncException('No sync task found for: '.$uuid);
-        }
+        $label = match ($this->status) {
+            self::STATUS_RUNNING => 'igniterlabs.squarepos::default.text_running',
+            self::STATUS_SUCCESS => 'igniterlabs.squarepos::default.text_success',
+            self::STATUS_FAILURE => 'igniterlabs.squarepos::default.text_failure',
+            default => 'igniterlabs.squarepos::default.text_queued',
+        };
 
-        return $model;
+        return lang($label);
     }
 
-    public function getStatusNameAttribute($value)
-    {
-        return lang(
-            $this->is_success
-                ? 'igniterlabs.squarepos::default.text_success'
-                : 'igniterlabs.squarepos::default.text_failed'
-        );
-    }
-
-    public function getCreatedSinceAttribute($value)
+    public function getCreatedSinceAttribute($value): ?string
     {
         return $this->created_at ? time_elapsed($this->created_at) : null;
     }
@@ -52,9 +71,9 @@ class SyncTask extends Model
     //
     //
 
-    public function isSystemOfRecordSquare()
+    public function isSystemOfRecordSquare(): bool
     {
-        return $this->type === Settings::SQUARE_SOR;
+        return $this->getConfigData('systemOfRecord') === Settings::SQUARE_SOR;
     }
 
     public function batchSize()
@@ -67,43 +86,79 @@ class SyncTask extends Model
         return collect(Settings::locationMapping())->pluck('remote_id', 'client_id')->all();
     }
 
-    public function setSyncJob($syncJob)
+    public function note(string $note): static
     {
-        $this->syncJob = $syncJob;
+        $notes = $this->notes ?? [];
+        $notes[] = $note;
+        $this->notes = $notes;
 
         return $this;
     }
 
-    public function note(string $note)
-    {
-        if (!is_null($this->syncJob->logsOutput)) {
-            $this->syncJob->logsOutput->writeln($note);
-        }
-
-        $this->attributes['notes'][] = $note;
-
-        return $this;
-    }
-
-    public function noteUpdated($model, string $name)
+    public function noteUpdated($model, string $name): static
     {
         return $this->note(sprintf(
             '%s (%s) updated to %s (%s)',
             $name,
             $model->getKey(),
-            $model->square_version,
-            $model->square_id
+            $model->squareLink?->square_version,
+            $model->squareLink?->square_id
         ));
     }
 
-    public function noteDeleted($model, string $name) {}
+    public function noteDeleted(object $model, string $name): static
+    {
+        $record = CatalogRecord::unwrap($model);
+        $id = method_exists($record, 'getId') ? $record->getId() : null;
+
+        return $this->note(sprintf('%s (%s) deleted in Square', $name, $id ?: 'unknown'));
+    }
+
+    public function getExceptionMessageAttribute(): ?string
+    {
+        return array_get($this->exception, 'message');
+    }
+
+    public function sendSummary(): void
+    {
+        if ($this->status !== self::STATUS_FAILURE || !Settings::get('sync_notify_email')) {
+            return;
+        }
+
+        $this->mailSend('igniterlabs.squarepos::mail.sync_completed', 'notify');
+    }
+
+    public function mailGetRecipients($type): array
+    {
+        $email = Settings::get('sync_notify_email');
+        if (!$email) {
+            return [];
+        }
+
+        return [[$email, $email]];
+    }
+
+    public function mailGetData(): array
+    {
+        return [
+            'sync_status' => match ($this->status) {
+                self::STATUS_RUNNING => 'Running',
+                self::STATUS_SUCCESS => 'Success',
+                self::STATUS_FAILURE => 'Failure',
+                default => 'Queued',
+            },
+            'sync_description' => (string)$this->description,
+            'sync_notes' => implode("\n", $this->notes ?? []),
+            'sync_exception' => (string)array_get($this->exception, 'message'),
+        ];
+    }
 
     public function getConfigData($key, $default = null)
     {
         return array_get($this->config_data, $key, $default);
     }
 
-    public function setConfigData($key, $value)
+    public function setConfigData($key, $value): static
     {
         $configData = $this->config_data;
 
@@ -114,7 +169,7 @@ class SyncTask extends Model
         return $this;
     }
 
-    public function forgetConfigData($key)
+    public function forgetConfigData($key): void
     {
         $configData = $this->config_data;
 
@@ -123,33 +178,57 @@ class SyncTask extends Model
         $this->config_data = $configData;
     }
 
-    public function saveException(Throwable $exception)
+    public function markAsFailure(Throwable $exception): static
     {
         $this->exception = [
             'code' => $exception->getCode(),
             'message' => $exception->getMessage(),
             'trace' => $exception->getTraceAsString(),
         ];
+        $this->status = self::STATUS_FAILURE;
 
         $this->save();
 
         return $this;
     }
 
-    public function markAsComplete()
+    public function markAsQueued(): static
     {
-        $this->is_success = 1;
+        $this->status = self::STATUS_QUEUED;
         $this->save();
 
         return $this;
     }
 
-    public function clearException()
+    public function markAsRunning(): static
+    {
+        $this->started_at = now();
+        $this->status = self::STATUS_RUNNING;
+        $this->save();
+
+        return $this;
+    }
+
+    public function markAsComplete(): static
+    {
+        $this->finished_at = now();
+        $this->status = self::STATUS_SUCCESS;
+        $this->save();
+
+        return $this;
+    }
+
+    public function clearException(): static
     {
         $this->exception = null;
 
         $this->save();
 
         return $this;
+    }
+
+    public function prunable(): Builder
+    {
+        return static::query()->where('created_at', '<=', Settings::getJobRetentionDays());
     }
 }

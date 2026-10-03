@@ -6,75 +6,30 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    protected static $squareTables = [
-        'menus',
-        'categories',
-        'menu_options',
-        'menu_option_values',
-        'menu_item_option_values',
-    ];
-
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
+    public function up(): void
     {
-        foreach (self::$squareTables as $squareTable) {
-            if (Schema::hasColumn($squareTable, 'square_id')) {
-                continue;
-            }
-
-            Schema::table($squareTable, function(Blueprint $table) use ($squareTable) {
-                $table->string('square_id')->nullable()->index();
-                $table->string('square_version')->nullable()->index();
-
-                if ($squareTable === 'menus') {
-                    $table->string('square_variation_id')->nullable()->index();
-                    $table->string('square_variation_version')->nullable()->index();
-                }
-                //
-                //                if ($squareTable === 'menu_item_option_values') {
-                //                    $table->string('square_modifier_list_id')->nullable()->index();
-                //                    $table->string('square_modifier_list_version')->nullable()->index();
-                //                }
-            });
-        }
+        Schema::create('squarepos_links', function(Blueprint $table): void {
+            $table->bigIncrements('id');
+            $table->string('linkable_type');
+            $table->unsignedBigInteger('linkable_id');
+            $table->string('square_id')->nullable();
+            $table->string('square_version')->nullable();
+            $table->boolean('square_dirty')->default(false);
+            $table->string('square_variation_id')->nullable();
+            $table->string('square_variation_version')->nullable();
+            $table->boolean('square_sync')->nullable();
+            $table->string('square_sku')->nullable();
+            $table->string('square_image_id')->nullable();
+            $table->string('square_stock_mode')->nullable();
+            $table->unique(['linkable_type', 'linkable_id']);
+            $table->index('square_id');
+            $table->index('square_variation_id');
+            $table->index('square_sku');
+        });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
+    public function down(): void
     {
-        foreach (self::$squareTables as $squareTable) {
-            if (!Schema::hasColumn($squareTable, 'square_id')) {
-                continue;
-            }
-
-            Schema::table($squareTable, function(Blueprint $table) use ($squareTable) {
-                $table->dropColumn([
-                    'square_id',
-                    'square_version',
-                ]);
-
-                if ($squareTable === 'menus') {
-                    $table->dropColumn([
-                        'square_variation_id',
-                        'square_variation_version',
-                    ]);
-                }
-
-                //                if ($squareTable === 'menu_item_option_values') {
-                //                    $table->dropColumn([
-                //                        'square_modifier_list_id',
-                //                        'square_modifier_list_version',
-                //                    ]);
-                //                }
-            });
-        }
+        Schema::dropIfExists('squarepos_links');
     }
 };
