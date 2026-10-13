@@ -20,7 +20,7 @@ class Settings extends Model
 
     public const string SQUARE_SOR = 'square';
 
-    public const string ENDPOINT = 'https://tasty-web.test/connect/';
+    public const string ENDPOINT = 'https://tastyigniter.com/connect/';
 
     public array $implement = [SettingsModel::class];
 
@@ -271,6 +271,7 @@ class Settings extends Model
         ]);
 
         self::set([
+            'environment' => 'production',
             'connection_data' => $data,
             'connection_status' => !empty($data['access_token']),
         ]);
