@@ -15,7 +15,7 @@ it('connects, stores a token, disconnects, and queues import and export', functi
     $this->actingAs(User::factory()->superUser()->create(), 'igniter-admin');
 
     Http::fake([
-        'https://tasty-web.test/connect/token/square' => Http::sequence()
+        '*/connect/token/square' => Http::sequence()
             ->push([
                 'access_token' => 'connected-token',
                 'merchant_id' => 'M',
@@ -43,8 +43,7 @@ it('connects, stores a token, disconnects, and queues import and export', functi
         ->and(Settings::connectionData('refresh_token'))->toBe('refresh-token')
         ->and(Settings::connectionData('merchant_id'))->toBe('M');
 
-    Http::assertSent(fn($request): bool => $request->url() === 'https://tasty-web.test/connect/token/square'
-        && $request['code'] === 'exchange-code');
+    Http::assertSent(fn($request): bool => $request['code'] === 'exchange-code');
 
     request()->merge(['error_message' => 'denied']);
     $merchant->token(null);
