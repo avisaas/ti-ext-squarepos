@@ -96,7 +96,21 @@ class Extension extends BaseExtension
     public function registerMailTemplates(): array
     {
         return [
-            'igniterlabs.squarepos::mail.sync_completed' => 'igniterlabs.squarepos::default.text_mail_sync_completed',
+            'igniterlabs.squarepos::mail.sync_completed' => [
+                'label' => 'igniterlabs.squarepos::default.text_mail_sync_completed',
+                'variables' => ['igniterlabs.squarepos::default.mail_variables.text_group_sync'],
+            ],
+        ];
+    }
+
+    public function registerMailVariables(): array
+    {
+        return [
+            'igniterlabs.squarepos::default.mail_variables.text_group_sync' => [
+                '{{ $sync_description }}' => 'igniterlabs.squarepos::default.mail_variables.text_sync_description',
+                '{{ $sync_notes }}' => 'igniterlabs.squarepos::default.mail_variables.text_sync_notes',
+                '{{ $sync_exception }}' => 'igniterlabs.squarepos::default.mail_variables.text_sync_exception',
+            ],
         ];
     }
 
