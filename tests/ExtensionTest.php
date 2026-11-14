@@ -22,7 +22,8 @@ it('registers the extension services', function(): void {
 
     expect($extension->registerPermissions())->toHaveKey('IgniterLabs.SquarePOS.Manage')
         ->and($extension->registerSettings()['settings']['model'])->toBe(Settings::class)
-        ->and($extension->registerMailTemplates())->toHaveKey('igniterlabs.squarepos::mail.sync_completed');
+        ->and($extension->registerMailTemplates())->toHaveKey('igniterlabs.squarepos::mail.sync_completed')
+        ->and($extension->registerMailVariables())->toHaveKey('igniterlabs.squarepos::default.mail_variables.text_group_sync');
 
     $extension->register();
     $extension->boot();
