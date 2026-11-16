@@ -111,4 +111,10 @@ return [
     'column_notes' => 'Notes',
     'text_no_notes' => 'No notes were recorded.',
     'text_no_exception' => 'No error was recorded.',
+    'mail_variables' => [
+        'text_group_sync' => 'Square sync variables',
+        'text_sync_description' => 'Sync description',
+        'text_sync_notes' => 'Sync notes',
+        'text_sync_exception' => 'Sync error',
+    ],
 ];

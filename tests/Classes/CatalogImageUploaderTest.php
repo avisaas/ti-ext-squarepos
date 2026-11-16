@@ -22,7 +22,7 @@ it('uploads a local menu image and skips work that is already in sync', function
             return $this->fullPath;
         }
 
-        public function getMimeType()
+        public function getMimeType(): string
         {
             return 'image/jpeg';
         }
@@ -77,7 +77,7 @@ it('copies a remote file into a temporary path and ignores empty or missing file
             return 'photos/item.jpg';
         }
 
-        public function getMimeType()
+        public function getMimeType(): null
         {
             return null;
         }
