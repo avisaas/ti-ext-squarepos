@@ -31,6 +31,7 @@ class Tasks extends AdminController
     public array $formConfig = [
         'name' => 'lang:igniterlabs.squarepos::default.text_tab_tasks',
         'model' => SyncTask::class,
+        'recordName' => 'id',
         'preview' => [
             'title' => 'lang:igniter::admin.form.preview_title',
             'back' => 'igniterlabs/squarepos/tasks',
